@@ -4,8 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Callback Coach</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<meta name="description" content="Rehearse tech interview answers against the clock, rate yourself, and track your growth across practice sessions.">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1A202B" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Callback Coach">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -13,11 +23,21 @@
   <div class="wrap">
     <div class="bar">
       <div class="brand"><div class="lamp" aria-hidden="true"></div><div><h1>Callback Coach</h1><small>Tech interview rehearsal</small></div></div>
+      <div class="hright">
       <div class="stats" aria-live="polite">
         <div class="stat"><b id="xp">0</b><span>XP</span></div>
         <div class="stat"><b id="lvl">Extra</b><span>Level</span></div>
         <div class="stat"><b id="streak">0</b><span>Day streak</span></div>
         <button class="stat link" id="sessStat" title="Open Progress"><b id="sess">1</b><span>Session</span></button>
+      </div>
+      <div class="acct" id="acct" hidden>
+        <button class="btn primary" id="loginBtn">Log in</button>
+        <div class="who" id="who" hidden>
+          <span class="avatar" id="avatar" aria-hidden="true"></span>
+          <span class="whotext"><b id="whoName"></b><small id="sync" aria-live="polite"></small></span>
+          <button class="btn ghost" id="logoutBtn">Log out</button>
+        </div>
+      </div>
       </div>
     </div>
     <nav role="tablist" aria-label="Practice stations">
@@ -28,6 +48,7 @@
       <button role="tab" id="t-code" aria-selected="false" data-tab="code">Code warm-ups</button>
       <button role="tab" id="t-mock" aria-selected="false" data-tab="mock">Mock pre-screen</button>
       <button role="tab" id="t-progress" aria-selected="false" data-tab="progress">Progress</button>
+      <button role="tab" id="t-profile" aria-selected="false" data-tab="profile">My profile</button>
     </nav>
   </div>
 </header>
@@ -74,6 +95,9 @@
       <div class="card"><span class="tag" style="align-self:flex-start">Simulate</span><h3>Mock pre-screen</h3>
         <p class="tip" style="margin:0">A seven-question recruiter call for the role you choose, in the order a real call usually follows. The 90-second clock starts on its own for each question. Answer out loud, peek at the sample if you need to, then rate yourself to save the answer and move on. Recording yourself on your phone helps a lot.</p>
         <div class="row"><button class="btn" data-go="mock">Open Mock pre-screen</button></div></div>
+      <div class="card"><span class="tag" style="align-self:flex-start">Personalize</span><h3>My profile</h3>
+        <p class="tip" style="margin:0">Sample answers are general, with <mark class="ph">[highlighted slots]</mark> for your details. Log in and add your background, best project, goals and more, and they fill in across the app, including the thank-you email. You can also write your own version of any answer. It replaces the sample in Question cards and the mock pre-screen.</p>
+        <div class="row"><button class="btn" data-go="profile">Open My profile</button></div></div>
       <div class="card"><span class="tag" style="align-self:flex-start">Track</span><h3>Progress</h3>
         <p class="tip" style="margin:0">Shows the current session, a grid of your scores by department across sessions, a side-by-side comparison of any two sessions (including your answers to the same question), every saved session, and backup buttons.</p>
         <div class="row"><button class="btn" data-go="progress">Open Progress</button></div></div>
@@ -94,22 +118,26 @@
         <p class="tip" style="margin:0">You earn XP for every rep: 10 / 5 / 2 for a rated answer, 5 per correct quiz answer, 15 per solved problem and 25 for finishing a mock screen. XP moves you up through six levels:</p>
         <p style="margin:0"><b>Extra</b> → <b>Understudy</b> (60) → <b>Ensemble</b> (180) → <b>Featured</b> (360) → <b>Lead</b> (600) → <b>Headliner</b> (900)</p>
         <p class="tip" style="margin:0">Your day streak counts the days in a row you've practiced. Short daily practice beats one long cram.</p></div>
-      <div class="card"><h3>Your data</h3>
+      <div class="card"><h3>Your account and data</h3>
         <ul class="checklist">
-          <li>Everything is saved in this browser on this device. Nothing is sent anywhere</li>
-          <li>Clearing browser data, using private mode or switching browsers starts you fresh</li>
-          <li>Use <b>Progress → Export backup</b> now and then to keep a copy</li>
-          <li><b>Import backup</b> restores that file, on this device or a new one</li>
+          <li><b>With a free account</b>, your progress saves to the cloud. Log in on any phone, tablet or computer and pick up where you left off</li>
+          <li>The ring around your initial in the header turns green once your progress has synced</li>
+          <li><b>Without an account</b>, progress stays in this browser only. Clearing browser data or switching devices starts you fresh</li>
+          <li>When you create an account, you can bring along the progress already on this device</li>
+          <li>Logging out removes your progress from this device. It's still in your account</li>
+          <li><b>Progress → Export backup</b> saves a copy as a file anytime</li>
         </ul></div>
     </div>
 
     <div class="card"><h3>Common questions</h3>
       <div class="grid2 tight">
         <p><b>Do I have to type my answers?</b> No. Saying them out loud is the real practice. Notes are optional, but they let you compare your wording between sessions.</p>
-        <p><b>The sample answers mention someone else's background.</b> They're examples. Rewrite them with your own stories, numbers and projects.</p>
+        <p><b>How do I make the answers mine?</b> Log in and open <i>My profile</i>. Your details fill into every answer, and you can save your own version of any answer from the question card.</p>
         <p><b>I ran over 90 seconds.</b> The clock keeps counting in red so you can see by how much. Aim to finish under the limit.</p>
         <p><b>Can I redo a question in the same session?</b> Yes. Your latest rating for that question is the one that counts toward the score.</p>
         <p><b>When should I end a session?</b> When you stop for the day, or before a session aimed at a specific interview.</p>
+        <p><b>Can I use it on my phone?</b> Yes. Open the site in your phone's browser and use "Add to Home Screen" to get an app icon that opens full screen.</p>
+        <p><b>I forgot my password.</b> Click <b>Log in</b>, enter your email and choose <b>Forgot password?</b> to get a reset link.</p>
         <p><b>Can I delete a session?</b> Yes. Open it under <i>Progress → Saved sessions</i> and click <b>Delete this session</b>.</p>
       </div></div>
   </section>
@@ -119,7 +147,7 @@
     <p class="lede">Most tech roles move through the same five or six stages. Each one checks something different, so prepare for the stage you're in. The practice tabs map to these stages.</p></div>
 
     <div class="stages">
-      <div class="stg"><span class="sn">1</span><div><h3>Application &amp; resume screen</h3><p><b>Checks:</b> keywords and a clear story. Many companies use applicant tracking systems that scan for words from the job post.</p><p><b>Prep:</b> mirror the post's language on your resume, put your best project (Ask BPL) near the top with a link, and keep LinkedIn and GitHub current. A referral from a real person beats a cold application by a wide margin, so ask your Pursuit network.</p></div></div>
+      <div class="stg"><span class="sn">1</span><div><h3>Application &amp; resume screen</h3><p><b>Checks:</b> keywords and a clear story. Many companies use applicant tracking systems that scan for words from the job post.</p><p><b>Prep:</b> mirror the post's language on your resume, put your best project (<span data-tok="project"></span>) near the top with a link, and keep LinkedIn and GitHub current. A referral from a real person beats a cold application by a wide margin, so ask classmates, alumni and former coworkers.</p></div></div>
       <div class="stg"><span class="sn">2</span><div><h3>Recruiter pre-screen · 20–30 min, phone or video</h3><p><b>Checks:</b> communication, basic fit, motivation, salary range, timeline, work authorization and location.</p><p><b>Prep:</b> a 60-second "tell me about yourself," a researched "why this company," your salary range, and your start date. Practice with the <i>Mock pre-screen</i> tab.</p></div></div>
       <div class="stg"><span class="sn">3</span><div><h3>Hiring manager interview · 30–60 min</h3><p><b>Checks:</b> whether you can do this specific job and work well with this team. Mostly behavioral and situational questions.</p><p><b>Prep:</b> five or six STAR stories that cover customers, conflict, failure, leadership, learning fast and teaching. Practice in <i>Question cards → Behavioral</i>.</p></div></div>
       <div class="stg"><span class="sn">4</span><div><h3>Technical or skills assessment</h3><p><b>Checks:</b> the hands-on skills in the post. This can be a timed online test (HackerRank, CodeSignal), a take-home project, a live exercise, a mock customer call, a product demo or a training sample.</p><p><b>Prep:</b> for engineering, timed easy problems three times a week (<i>Code warm-ups</i>). For customer success, solutions or enablement roles, practice explaining a technical concept to a non-technical person and running a 10-minute demo of your own project.</p></div></div>
@@ -143,7 +171,7 @@
         <ul class="checklist">
           <li>Answer in 1–2 minutes, then stop. Offer more: "Happy to go deeper on that"</li>
           <li>Say "I" for what you did and "we" for the team result</li>
-          <li>Use real numbers where you can: 4 venues, 9 years, team of 4</li>
+          <li>Use real numbers where you can: team size, years, customers served, results</li>
           <li>It's fine to pause: "Good question, let me think for a second"</li>
           <li>If you don't know a technical answer, say so and explain how you'd find out</li>
           <li>Never criticize a former employer or teammate</li>
@@ -162,19 +190,19 @@
       </div></div>
 
     <div class="card"><h3>Thank-you email template</h3>
-      <pre class="email" id="email">Subject: Thank you — [Role] interview
+      <pre class="email" id="email">Subject: Thank you — <mark class="ph">[Role]</mark> interview
 
-Hi [Name],
+Hi <mark class="ph">[Name]</mark>,
 
-Thank you for taking the time to talk with me today about the [Role] position. I especially enjoyed hearing about [specific thing they mentioned].
+Thank you for taking the time to talk with me today about the <mark class="ph">[Role]</mark> position. I especially enjoyed hearing about <mark class="ph">[specific thing they mentioned]</mark>.
 
-Our conversation made me even more excited about the role. My experience [training teams / managing customer experience / building Ask BPL] lines up well with [a need they described], and I'd love to help with that.
+Our conversation made me even more excited about the role. My experience in <span data-tok="background"></span> and building <span data-tok="project"></span> lines up well with <mark class="ph">[a need they described]</mark>, and I'd love to help with that.
 
 Please let me know if there's anything else I can share. I look forward to hearing about next steps.
 
 Best,
-Lawrence Carrillo
-linkedin.com/in/lawrencecarrillo</pre>
+<span data-tok="name"></span>
+<span data-tok="linkedin"></span></pre>
       <div class="row"><button class="btn" id="copyEmail">Copy template</button></div></div>
 
     <div class="grid2">
@@ -191,8 +219,8 @@ linkedin.com/in/lawrencecarrillo</pre>
         <p class="tip" style="margin:0">Expect some version of "You're new to tech, so why should we hire you?" Answer it confidently in three beats:</p>
         <ol class="checklist">
           <li><b>Own it:</b> "I'm newer to tech, but not new to work."</li>
-          <li><b>Translate it:</b> "I've trained staff, managed four venues and handled thousands of customers. That's client management and enablement."</li>
-          <li><b>Prove it:</b> "And I've shipped real AI tools, like Ask BPL for Brooklyn Public Library."</li>
+          <li><b>Translate it:</b> "In <span data-tok="background"></span> I <mark class="ph">[trained staff / managed a team / handled hundreds of customers]</mark>. That's client management and enablement."</li>
+          <li><b>Prove it:</b> "And I've shipped real work, like <span data-tok="project"></span>."</li>
         </ol></div>
     </div>
 
@@ -242,9 +270,40 @@ linkedin.com/in/lawrencecarrillo</pre>
     <p class="lede">Everything you rate, finish or solve is saved to the current session, including the notes you typed and how long you took. End the session when you're done for the day, start a fresh one next time, and compare how each department moves.</p></div>
     <div id="prog"></div>
   </section>
+
+  <!-- PROFILE -->
+  <section role="tabpanel" id="p-profile" aria-labelledby="t-profile" hidden>
+    <div><h2>My profile</h2>
+    <p class="lede">The sample answers are written for anyone. Add your details here and they become yours.</p></div>
+    <div id="profile"></div>
+  </section>
 </main>
 <div class="toast" id="toast" role="status"></div>
 
+<dialog id="authDlg" aria-labelledby="authTitle">
+  <form id="authForm" novalidate>
+    <div class="dlgtop"><h2 id="authTitle">Welcome back</h2><button type="button" class="btn ghost" id="authClose" aria-label="Close">✕</button></div>
+    <p class="tip" style="margin:0">A free account saves your sessions and scores to the cloud so you can pick up on any device. Without one, progress stays in this browser.</p>
+    <div class="chips" id="authModes" role="group" aria-label="Account">
+      <button type="button" class="chip" data-mode="login" aria-pressed="true">Log in</button>
+      <button type="button" class="chip" data-mode="signup" aria-pressed="false">Create account</button>
+    </div>
+    <label class="field">Email<input type="email" id="authEmail" autocomplete="email" required></label>
+    <label class="field">Password<input type="password" id="authPw" autocomplete="current-password" required minlength="6"></label>
+    <div class="row" style="justify-content:space-between">
+      <label class="tip"><input type="checkbox" id="showPw"> Show password</label>
+      <span class="tip" id="pwHint" hidden>At least 6 characters</span>
+      <button type="button" class="btn ghost" id="forgot">Forgot password?</button>
+    </div>
+    <p id="authErr" role="alert"></p>
+    <button type="submit" class="btn primary" id="authSubmit">Log in</button>
+    <div class="or"><span>or</span></div>
+    <button type="button" class="btn" id="googleBtn">Continue with Google</button>
+  </form>
+</dialog>
+
+<script src="firebase-config.js"></script>
 <script src="script.js"></script>
+<script src="auth.js"></script>
 </body>
 </html>

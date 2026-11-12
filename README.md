@@ -13,16 +13,39 @@ It's built for career changers moving into tech roles such as customer success, 
 - **Code warm-ups:** HackerRank-style JavaScript and SQL problems with a timer, a hint and a solution.
 - **Mock pre-screen:** a 7-question recruiter screen for your chosen role, in the order a real call usually follows, with a timer that starts on its own for each question.
 - **Progress:** saves your answers, scores and times by session. You can compare sessions department by department and see your answers to the same question side by side.
+- **My profile:** sample answers are written for anyone, with highlighted slots for personal details. Signed-in users add their name, background, best project, goals and more, and those details fill in across the app, including the playbook and thank-you email. They can also save their own version of any answer, which replaces the sample in Question cards and the mock pre-screen.
+- **Free accounts:** sign up with email and password or Google, log in and out, and your progress syncs to the cloud so you can switch between devices. Without an account, the app works in guest mode.
+- **Works on any device:** the layout adapts to phones, tablets and desktops, with light and dark themes. On a phone you can add it to your home screen and it opens full screen like an app.
 - **XP, levels and a daily streak** to keep you practicing.
 
 ## Getting started
 
 You don't need to install or build anything.
 
-1. Clone or download this repository.
-2. Open `index.html` in a web browser.
+**Try it on your computer:** clone or download this repository and open `index.html` in a web browser. Everything works except accounts, which need the site to be served over `http(s)` (see below).
 
-To host it online, publish the folder with any static host, such as GitHub Pages.
+**Put it on the web (GitHub Pages, free):**
+
+1. Push this repository to GitHub.
+2. On GitHub, go to **Settings → Pages**.
+3. Under **Build and deployment**, choose **Deploy from a branch**, pick `main` and `/ (root)`, and save.
+4. After a minute your site is live at `https://<your-username>.github.io/<repo-name>/`. Share that link. It works on phones, tablets and computers.
+
+Any other static host (Netlify, Vercel, Cloudflare Pages) works too. Just upload the folder.
+
+## Setting up accounts
+
+Accounts use [Firebase](https://firebase.google.com/) for sign-in and storage. The free Spark plan covers this app comfortably. Until you complete these steps, the app runs in guest mode and the **Log in** button stays hidden.
+
+1. **Create a project.** Go to the [Firebase console](https://console.firebase.google.com/), click **Add project**, name it (for example `callback-coach`) and finish. Google Analytics is optional.
+2. **Register the web app.** In the project overview, click the **Web** icon (`</>`), give it a nickname and register it. Copy the `firebaseConfig` values it shows into [`firebase-config.js`](firebase-config.js).
+3. **Turn on sign-in.** Go to **Build → Authentication → Get started → Sign-in method** and enable **Email/Password**. Optionally enable **Google** too. If you don't, the "Continue with Google" button shows an error message when clicked.
+4. **Create the database.** Go to **Build → Firestore Database → Create database**, pick a location near your users, and start in **production mode**.
+5. **Protect each person's data.** In Firestore, open the **Rules** tab, replace the contents with the rules in [`firestore.rules`](firestore.rules), and click **Publish**. These rules let each signed-in user read and write only their own progress.
+6. **Allow your website.** Go to **Authentication → Settings → Authorized domains** and add your site's domain, such as `your-username.github.io`. `localhost` is already allowed for local testing.
+7. Commit and push `firebase-config.js`. The values in it are not secret. Firebase uses them to find your project, and the rules from step 5 are what protect the data.
+
+To test accounts on your own computer, serve the folder instead of opening the file directly, for example with `python3 -m http.server 8000` and then `http://localhost:8000`.
 
 ## How sessions work
 
@@ -49,25 +72,38 @@ The **Growth by department** grid shows these scores for each session. The ▲/�
 
 ### Your data
 
-Your progress is saved in your browser's local storage. It stays on your device and is never sent anywhere. Clearing your browser data or switching browsers or devices loses it, so use **Progress → Export backup** now and then. **Import backup** restores a backup file.
+- **With an account:** progress is stored in your Firebase project under `users/{uid}`, one document per user, and synced automatically a moment after each change. A copy is also kept in the browser, so the app opens instantly and keeps working offline. It syncs again when you're back online. Logging out removes that local copy from the device.
+- **As a guest:** progress is saved in the browser only. Clearing browser data or switching devices loses it.
+- **Either way:** **Progress → Export backup** downloads a copy of everything, and **Import backup** restores it.
+
+If someone uses the app on two devices at once, the most recently saved version wins when they next log in.
 
 ## Project structure
 
 ```
-index.html   Page markup and tab layout
-styles.css   Styles, including light and dark themes
-script.js    Question data, practice logic, sessions and progress tracking
+index.html             Page markup, tab layout and the sign-in dialog
+styles.css             Styles: light and dark themes, phone/tablet/desktop layouts
+script.js              Question data, practice logic, sessions and progress tracking
+auth.js                Accounts: sign up, log in and out, cloud sync (Firebase)
+firebase-config.js     Your Firebase project settings (empty = guest mode)
+firestore.rules        Database security rules to paste into Firebase
+manifest.webmanifest   Lets phones install the app to the home screen
+icons/                 App icons
 ```
 
-It's plain HTML, CSS and JavaScript with no frameworks or build step. Fonts load from Google Fonts.
+It's plain HTML, CSS and JavaScript with no frameworks or build step. Fonts load from Google Fonts, and the Firebase SDK loads from Google's CDN only when accounts are set up.
 
 ## Customizing
 
 All the content is at the top of `script.js`:
 
-- `QS`: interview questions, sample answers and coach's notes. The sample answers draw on the author's own background, so rewrite them in your own words.
+- `QS`: interview questions, sample answers and coach's notes. Sample answers are templates:
+  - `{{key}}` fills in from the user's profile, for example `{{project}}` or `{{background}}`. The keys and their form labels are in `TOK`.
+  - `[text in brackets]` marks details only the user can supply, and is highlighted on screen.
 - `QUIZ`: quiz questions. `a` is the index of the correct option.
 - `CODE`: coding problems with starter code, a hint and a solution.
 - `CATS`: question categories.
 
-The thank-you email template is in `index.html`.
+The playbook and thank-you email in `index.html` use `<span data-tok="key"></span>` for the same profile slots.
+
+Editing the profile and saving your own answers requires logging in once accounts are set up. If accounts aren't set up, anyone can personalize, and it's saved in their browser.

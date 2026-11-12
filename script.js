@@ -4,49 +4,49 @@ const CATS = {
   swe:"Software engineer", ai:"AI / prompt", cs:"Customer success", se:"Solutions engineer"
 };
 const QS = [
- {id:"o1",c:"opening",q:"Tell me about yourself.",want:"A short story of past, present and future that ends with why you fit this job.",a:"I've spent most of my career in hospitality and operations in New York. Most recently I managed service across four venues at The Hospitality Department in the Martinique Hotel, and before that I was a front of house manager at Eataly Flatiron and worked in customer experience at Goldbelly.\n\nIn March 2026 I joined Pursuit's AI Native Fellowship. I've been building real products there, including Ask BPL, an AI assistant that helps Brooklyn Public Library staff find answers in their policies.\n\nI'm looking for a role where I can combine understanding people with building and teaching AI tools. That's why this role caught my eye.",tip:"Have a 30-second version ready too. Some recruiters cut in early."},
- {id:"o2",c:"opening",q:"Why do you want to work in tech?",want:"Real motivation, not just \"it pays well.\"",a:"In every job I've had, I was the person fixing the process: the reservation system, the scheduling, the handoffs between teams. I love solving the problem behind the problem. AI tools now let me build those fixes myself, and Pursuit gave me the structure to do it seriously.",tip:"Tie it to a concrete moment you remember."},
+ {id:"o1",c:"opening",q:"Tell me about yourself.",want:"A short story of past, present and future that ends with why you fit this job.",a:"I've spent most of my career in {{background}}. Most recently I was {{recentRole}}, where I [one thing you're proud of].\n\nRecently I completed {{program}}, where I built {{project}}: {{projectWhat}}.\n\nI'm looking for a role where I can combine what I learned in {{background}} with {{goal}}. That's why this role caught my eye.",tip:"Have a 30-second version ready too. Some recruiters cut in early."},
+ {id:"o2",c:"opening",q:"Why do you want to work in tech?",want:"Real motivation, not just \"it pays well.\"",a:"In every job I've had, I was the person fixing the process: [an example from your past work]. I love solving the problem behind the problem. Tech lets me build those fixes myself, and {{program}} gave me the structure to do it seriously.",tip:"Tie it to a concrete moment you remember."},
  {id:"o3",c:"opening",q:"Why this company?",want:"Proof you did your homework.",a:"I've been following [company] because of [specific product, mission or recent news]. I really connect with [a value from their site]. With my background in [customer experience / training / the arts], I think I could help with [something from the job post].",tip:"Research this before every call. One specific detail beats three general ones."},
- {id:"o4",c:"opening",q:"Why this role?",want:"A clear match between the job post and your experience.",a:"The posting talks about [two duties from the post]. That's what I've done for years in hospitality and training, just with guests and staff instead of users. Now I can also handle the technical side, since I've built and shipped AI tools, so I can speak to both the customer and the engineering team.",tip:"Quote two phrases from the job post back to them."},
- {id:"o5",c:"opening",q:"Walk me through your resume.",want:"Time order, one or two sentences per role, each connected to the next.",a:"I started in performing arts as an actor and puppeteer, and became a licensed massage therapist running my own practice, which taught me marketing, finances and clients. In restaurants I moved into management at Union Square Hospitality Group, Eataly and The Hospitality Department, and I trained staff and wrote training books along the way. At Goldbelly and RH I did customer experience remotely. Each role pulled me closer to systems and technology, which led me to Pursuit.",tip:"Keep it under two minutes. Stop on the role that leads into this job."},
- {id:"o6",c:"opening",q:"What's a project you're proud of?",want:"Something real, your specific part, and the impact.",a:"Ask BPL, my capstone. My team of four built an AI assistant for Brooklyn Public Library staff. Staff ask a policy question in plain English and get an answer drawn from the library's actual policy documents. It's for a real client with real users, so accuracy matters. My part was [your contribution].",tip:"Backup: the feature your team shipped on Excalidraw's open-source codebase."},
- {id:"b1",c:"behavioral",star:1,q:"Tell me about a time you dealt with an unhappy customer.",want:"Empathy, ownership and a good outcome.",a:"S: At Eataly, a guest was upset because [what went wrong].\nT: As the manager on the floor, it was on me to fix it.\nA: I listened without interrupting, apologized, and told them exactly what I'd do. Then I [your fix].\nR: They [came back / left a good review]. Most angry customers want to feel heard first.",tip:"Add a tech link: \"Users get frustrated with software too, and it's the same skill.\""},
- {id:"b2",c:"behavioral",star:1,q:"Tell me about a time you led a team under pressure.",want:"Calm leadership with clear communication.",a:"S: I've been a float captain for the Macy's Thanksgiving Day Parade for nine years.\nT: I organize my team, walk the route and get the float through the finish line for the live NBC broadcast.\nA: One year [a specific challenge], so I [briefed the team / reassigned roles / stayed calm].\nR: We hit our mark on live TV. When there's no second take, preparation and clear communication are everything.",tip:"This story is memorable. Use it."},
- {id:"b3",c:"behavioral",star:1,q:"Tell me about a conflict with a coworker or teammate.",want:"You can disagree respectfully and still deliver.",a:"S: On a Pursuit team project, a teammate and I disagreed about [approach].\nT: We had a deadline and needed to agree.\nA: I asked to talk one-on-one, listened to their reasoning, and shared mine. We [compromised / tested both / asked the client].\nR: We shipped on time and worked better together after. Argue about the idea, not the person.",tip:"Never make the other person the villain."},
+ {id:"o4",c:"opening",q:"Why this role?",want:"A clear match between the job post and your experience.",a:"The posting talks about [two duties from the post]. That's what I've done for years in {{background}}, just with [customers / guests / students] instead of users. Now I can also handle the technical side, since I've built {{project}}, so I can speak to both the customer and the engineering team.",tip:"Quote two phrases from the job post back to them."},
+ {id:"o5",c:"opening",q:"Walk me through your resume.",want:"Time order, one or two sentences per role, each connected to the next.",a:"I started in [your first field], where I learned [a skill that still matters]. Then I moved into [your next role], where I [a bigger responsibility]. Most recently I was {{recentRole}}. Each role pulled me closer to systems and technology, which led me to {{program}}.",tip:"Keep it under two minutes. Stop on the role that leads into this job."},
+ {id:"o6",c:"opening",q:"What's a project you're proud of?",want:"Something real, your specific part, and the impact.",a:"{{project}}. It's {{projectWhat}}. It has real users, so [why getting it right mattered]. My part was [your specific contribution], and the result was [the impact, ideally with a number].",tip:"Have a second project ready in case they ask for another example."},
+ {id:"b1",c:"behavioral",star:1,q:"Tell me about a time you dealt with an unhappy customer.",want:"Empathy, ownership and a good outcome.",a:"S: At [company], a customer was upset because [what went wrong].\nT: As [your role], it was on me to fix it.\nA: I listened without interrupting, apologized, and told them exactly what I'd do. Then I [your fix].\nR: They [came back / left a good review / stayed a customer]. Most angry customers want to feel heard first.",tip:"Add a tech link: \"Users get frustrated with software too, and it's the same skill.\""},
+ {id:"b2",c:"behavioral",star:1,q:"Tell me about a time you led a team under pressure.",want:"Calm leadership with clear communication.",a:"S: [A high-pressure moment: a launch, a rush, a live event, a hard deadline].\nT: I was responsible for [your part in it] and a team of [number].\nA: When [the specific challenge] happened, I [briefed the team / reassigned roles / set clear priorities] and stayed calm.\nR: We [hit the deadline / delivered on time]. When there's no second take, preparation and clear communication are everything.",tip:"Use your most memorable story. Unusual details stick with interviewers."},
+ {id:"b3",c:"behavioral",star:1,q:"Tell me about a conflict with a coworker or teammate.",want:"You can disagree respectfully and still deliver.",a:"S: On a team project, a teammate and I disagreed about [approach].\nT: We had a deadline and needed to agree.\nA: I asked to talk one-on-one, listened to their reasoning, and shared mine. We [compromised / tested both / asked the client].\nR: We shipped on time and worked better together after. Argue about the idea, not the person.",tip:"Never make the other person the villain."},
  {id:"b4",c:"behavioral",star:1,q:"Tell me about a time you failed or made a mistake.",want:"Honesty and what you changed afterward.",a:"S/T: [A real, moderate mistake: a scheduling error, a bug, a missed handoff.]\nA: I owned it right away, told my team, and fixed it by [action].\nR: Then I [changed a process or habit] so it wouldn't happen again.",tip:"Pick something real but not disastrous. Spend most of the time on the fix."},
- {id:"b5",c:"behavioral",star:1,q:"Tell me about a time you had to learn something new quickly.",want:"How you learn, not just that you did.",a:"When I started Pursuit, I'd never [used Git / worked in a large codebase]. Within weeks my team was shipping a feature on Excalidraw's open-source code. I learned by breaking it into small pieces, asking questions early, using AI to explain code, and then checking it myself.",tip:"Name your learning method. Teaching roles love this."},
- {id:"b6",c:"behavioral",star:1,q:"Tell me about a time you taught or trained someone.",want:"You can make complex things clear for others.",a:"S: In hospitality I trained new bartenders and servers, and I wrote the front-of-house training book.\nT: New hires needed to be floor-ready in [timeframe].\nA: I broke the job into short lessons, demonstrated, let them practice, and checked in after each shift.\nR: [Result: faster ramp-up, fewer mistakes]. The same approach works for teaching people new AI tools.",tip:"Great for AI enablement and customer success roles."},
- {id:"b7",c:"behavioral",star:1,q:"How do you handle many tasks at once?",want:"A real system you use.",a:"Running four venues at once at The Hospitality Department meant constant juggling. I'd [start each shift with a priorities list, delegate to leads, and check in at set times]. In tech I do the same with a task board or GitHub issues.",tip:"Describe the system, then one example."},
- {id:"l1",c:"logistics",q:"What are your salary expectations?",want:"A researched range, said calmly.",a:"Based on my research for this role in New York, I'm looking in the range of [low end] to [high end]. I'm flexible depending on the full package and growth opportunity.",tip:"NYC job posts must list a pay range by law. Start there."},
- {id:"l2",c:"logistics",q:"When can you start?",want:"A clear, honest date.",a:"I've wrapped up Pursuit's fellowship and I can start [date].",tip:"Know your answer before the call."},
- {id:"l3",c:"logistics",q:"Remote, hybrid or in-office?",want:"Flexibility plus your real preference.",a:"I'm based in Queens, so I'm happy with [your preference]. I've also worked fully remote before, at RH, so I'm comfortable with that setup.",tip:"Check the job post first so you aren't surprised."},
- {id:"l4",c:"logistics",q:"Why are you leaving hospitality?",want:"A positive reason, no complaints.",a:"I'm not running away from hospitality, I'm taking it with me. The best part of that work was solving problems for people, and tech lets me do that at a bigger scale.",tip:"Never criticize a past employer."},
+ {id:"b5",c:"behavioral",star:1,q:"Tell me about a time you had to learn something new quickly.",want:"How you learn, not just that you did.",a:"When I started {{program}}, I'd never [used Git / worked in a large codebase / used a new tool]. Within [a few weeks] I was [shipping a feature / using it on a real project]. I learned by breaking it into small pieces, asking questions early, using AI to explain things, and then checking the work myself.",tip:"Name your learning method. Teaching roles love this."},
+ {id:"b6",c:"behavioral",star:1,q:"Tell me about a time you taught or trained someone.",want:"You can make complex things clear for others.",a:"S: As {{recentRole}}, I trained [new hires / customers / students].\nT: They needed to be ready in [timeframe].\nA: I broke the job into short lessons, demonstrated, let them practice, and checked in afterward.\nR: [Result: faster ramp-up, fewer mistakes]. The same approach works for teaching people new tools.",tip:"Great for AI enablement and customer success roles."},
+ {id:"b7",c:"behavioral",star:1,q:"How do you handle many tasks at once?",want:"A real system you use.",a:"In {{background}} I was always juggling [several responsibilities]. I'd [start each day with a priorities list, delegate where I could, and check in at set times]. In tech I do the same with a task board or GitHub issues.",tip:"Describe the system, then one example."},
+ {id:"l1",c:"logistics",q:"What are your salary expectations?",want:"A researched range, said calmly.",a:"Based on my research for this role in [city], I'm looking in the range of {{salary}}. I'm flexible depending on the full package and growth opportunity.",tip:"Many job posts list a pay range, and some places (like NYC) require it by law. Start there."},
+ {id:"l2",c:"logistics",q:"When can you start?",want:"A clear, honest date.",a:"I can start {{startDate}}.",tip:"Know your answer before the call."},
+ {id:"l3",c:"logistics",q:"Remote, hybrid or in-office?",want:"Flexibility plus your real preference.",a:"I'm based in {{location}}, so I'm happy with [your preference]. [If true: I've worked fully remote before, so I'm comfortable with that setup.]",tip:"Check the job post first so you aren't surprised."},
+ {id:"l4",c:"logistics",q:"Why are you leaving {{background}}?",want:"A positive reason, no complaints.",a:"I'm not running away from {{background}}, I'm taking it with me. The best part of that work was [what you loved about it], and tech lets me do that at a bigger scale.",tip:"Never criticize a past employer."},
  {id:"s1",c:"swe",q:"What happens when you type a URL into a browser?",want:"The basic flow in plain language.",a:"The browser looks up the site's address through DNS, which works like a phone book for the internet. It sends a request to that server, the server sends back HTML, CSS and JavaScript, and the browser turns that into the page you see.",tip:"Keep it simple unless they ask for more detail."},
- {id:"s2",c:"swe",q:"What's the difference between frontend and backend?",want:"A clear split, ideally with an analogy.",a:"Frontend is what the user sees and clicks: layout, buttons and forms. Backend is behind the scenes: the server, the database and the logic that saves and fetches data. In a restaurant, frontend is the dining room and backend is the kitchen.",tip:"Your restaurant analogies are a strength. Use them."},
- {id:"s3",c:"swe",q:"What is an API?",want:"A definition plus an example.",a:"An API is a set of rules that lets two programs talk to each other. One sends a request and the other sends back data. It's like a waiter: you don't walk into the kitchen, you give your order to the waiter and they bring back your food.",tip:"Mention an API you've actually used, like Google Maps in your hackathon app."},
- {id:"s4",c:"swe",q:"What is Git and why do teams use it?",want:"Branches, pull requests and review.",a:"Git tracks every change to code so you can see history and undo mistakes. Teams work on branches, then open a pull request so others can review before merging into main. I used that workflow on our Excalidraw feature.",tip:""},
+ {id:"s2",c:"swe",q:"What's the difference between frontend and backend?",want:"A clear split, ideally with an analogy.",a:"Frontend is what the user sees and clicks: layout, buttons and forms. Backend is behind the scenes: the server, the database and the logic that saves and fetches data. In a restaurant, frontend is the dining room and backend is the kitchen.",tip:"Everyday analogies, like a restaurant, make technical ideas easy to follow."},
+ {id:"s3",c:"swe",q:"What is an API?",want:"A definition plus an example.",a:"An API is a set of rules that lets two programs talk to each other. One sends a request and the other sends back data. It's like a waiter: you don't walk into the kitchen, you give your order to the waiter and they bring back your food.",tip:"Mention an API you've actually used in one of your projects."},
+ {id:"s4",c:"swe",q:"What is Git and why do teams use it?",want:"Branches, pull requests and review.",a:"Git tracks every change to code so you can see history and undo mistakes. Teams work on branches, then open a pull request so others can review before merging into main. I used that workflow on {{project}}.",tip:""},
  {id:"s5",c:"swe",q:"How do you debug a problem?",want:"A calm, step-by-step method.",a:"First I reproduce the bug. Then I read the error message and narrow down where it starts using console logs or dev tools. I change one thing at a time and test. If I'm stuck I search, ask AI to explain, or ask a teammate, and I always confirm the fix works.",tip:""},
  {id:"s6",c:"swe",q:"How do you use AI coding tools?",want:"Useful, but you stay responsible.",a:"I use them to explain unfamiliar code, draft boilerplate and brainstorm approaches. I treat the output like a first draft: I read it, test it and make sure I understand it before I commit it. AI speeds me up, but I'm responsible for the code.",tip:"More companies ask this every month."},
  {id:"a1",c:"ai",q:"What makes a good prompt?",want:"Role, context, task, format, examples, and what to do when unsure.",a:"A good prompt is clear and specific. It gives the AI a role, the context it needs, the exact task, the format I want back, and examples of good and bad answers. It also says what to do when the AI doesn't know, like \"say you're not sure instead of guessing.\"",tip:""},
  {id:"a2",c:"ai",q:"A prompt gives bad or inconsistent results. How do you fix it?",want:"A test-and-compare method, not guessing.",a:"I collect examples of the bad outputs to see the pattern. I check whether the prompt is vague, missing context or asking too much at once. Then I change one thing at a time and re-test on the same set of inputs so the comparison is fair.",tip:""},
- {id:"a3",c:"ai",q:"How do you know if an AI's answer is good?",want:"Test sets, rubrics, edge cases.",a:"I build a small test set of real questions with expected answers, then score outputs against a checklist: accurate, complete, right format and safe. On Ask BPL the key check is whether the answer matches the library's actual policy, because a wrong answer could cause real problems for staff.",tip:""},
+ {id:"a3",c:"ai",q:"How do you know if an AI's answer is good?",want:"Test sets, rubrics, edge cases.",a:"I build a small test set of real questions with expected answers, then score outputs against a checklist: accurate, complete, right format and safe. For an assistant that answers from company policies, the key check is whether the answer matches the actual policy, because a wrong answer could cause real problems.",tip:""},
  {id:"a4",c:"ai",q:"What is a hallucination, and how do you reduce it?",want:"Grounding, citations and permission to say \"I don't know.\"",a:"A hallucination is when the AI confidently makes something up. I reduce it by giving the AI real source material, telling it to only use that material, asking it to cite where the answer came from, and telling it to say \"I don't know\" when the answer isn't there.",tip:""},
- {id:"a5",c:"ai",q:"What is RAG?",want:"Retrieve first, then generate.",a:"RAG means retrieval-augmented generation. The system first searches your own documents for the relevant pieces, then gives those to the AI to answer from. That's how Ask BPL works: it pulls the right section of the library's policies, then the AI explains it in plain language.",tip:""},
- {id:"a6",c:"ai",q:"How would you teach a non-technical team to use an AI tool?",want:"An enablement mindset: start small, practice, follow up.",a:"I'd start with one task they already do every week and show how the tool helps with it. Then a short hands-on session where everyone tries it with their own work, a one-page cheat sheet, and office hours a week later to answer questions. I'd track who's using it and gather feedback to improve the training.",tip:"Lean on your teaching artist and staff-training background here."},
+ {id:"a5",c:"ai",q:"What is RAG?",want:"Retrieve first, then generate.",a:"RAG means retrieval-augmented generation. The system first searches your own documents for the relevant pieces, then gives those to the AI to answer from. For example, a help-desk assistant pulls the right section of the company's policies, then the AI explains it in plain language.",tip:""},
+ {id:"a6",c:"ai",q:"How would you teach a non-technical team to use an AI tool?",want:"An enablement mindset: start small, practice, follow up.",a:"I'd start with one task they already do every week and show how the tool helps with it. Then a short hands-on session where everyone tries it with their own work, a one-page cheat sheet, and office hours a week later to answer questions. I'd track who's using it and gather feedback to improve the training.",tip:"Lean on any experience you have training or teaching people."},
  {id:"a7",c:"ai",q:"When should you NOT use AI?",want:"Judgment and risk awareness.",a:"When a mistake would be costly and no human is checking, when a simple rule or regular code would be more reliable, or when the data is private and shouldn't go to an outside model. Sometimes a spreadsheet is the better answer.",tip:""},
  {id:"c1",c:"cs",q:"A customer says the integration stopped syncing this morning. What do you do?",want:"Empathy first, then logical troubleshooting.",a:"Reply right away: acknowledge the problem, apologize for the disruption, ask when it last worked and for a screenshot of any error, and promise an update time.\n\nThen: check the status page, confirm their API key or login hasn't expired (look for 401 errors), read the sync logs for the first failure, try to reproduce it in a test account, and escalate to engineering with details if it's a bug, keeping the customer updated.",tip:"Graders look for empathy, a next step and a promised update time."},
- {id:"c2",c:"cs",q:"How would you onboard a new customer to our product?",want:"A clear plan with milestones.",a:"I'd start with a kickoff call to learn their goals and what success looks like. Then a short setup plan with dates, a hands-on training session for their team, and a check-in after two weeks to see what's working. I'd watch usage and reach out early if adoption is slow.",tip:"This is like training new staff on opening day."},
+ {id:"c2",c:"cs",q:"How would you onboard a new customer to our product?",want:"A clear plan with milestones.",a:"I'd start with a kickoff call to learn their goals and what success looks like. Then a short setup plan with dates, a hands-on training session for their team, and a check-in after two weeks to see what's working. I'd watch usage and reach out early if adoption is slow.",tip:"Think of it like training a new team member: clear goals, hands-on practice, then follow-up."},
  {id:"c3",c:"cs",q:"A customer wants a feature we don't have. What do you say?",want:"Honest, helpful, and you log the feedback.",a:"I'd thank them, ask what problem they're trying to solve, and share any workaround that exists today. I'd be honest that it isn't available, log the request for the product team with their use case, and follow up if it gets built.",tip:"Never promise a feature you can't guarantee."},
  {id:"c4",c:"cs",q:"A big account is using the product less and may not renew. What do you do?",want:"Proactive, data-informed retention.",a:"First I'd look at the usage data to see what dropped and when. Then I'd reach out to my main contact, not to sell, but to ask how things are going and what's changed on their side, like a new team lead or new goals. Based on that, I'd offer a refresher training, connect them with a feature that fits their new goals, or bring in support for any open issues. I'd set a check-in plan through renewal.",tip:"Interviewers want to hear that you act before the customer complains."},
- {id:"c5",c:"cs",q:"How do you prioritize when several customers need you at once?",want:"A clear triage method.",a:"I sort by impact and urgency: anything blocking a customer's business comes first, then deadlines, then routine requests. I tell each customer when they'll hear from me so nobody feels ignored. On a busy restaurant floor I did the same thing every night: the table with a problem gets you first, but everyone gets acknowledged.",tip:""},
+ {id:"c5",c:"cs",q:"How do you prioritize when several customers need you at once?",want:"A clear triage method.",a:"I sort by impact and urgency: anything blocking a customer's business comes first, then deadlines, then routine requests. I tell each customer when they'll hear from me so nobody feels ignored. The customer with the biggest problem gets me first, but everyone gets acknowledged.",tip:""},
  {id:"c6",c:"cs",q:"What metrics matter in customer success?",want:"You know how the role is measured.",a:"Retention and churn rate, net revenue retention, product adoption and usage, customer satisfaction scores like CSAT or NPS, time to first value during onboarding, and support ticket trends. Together they show whether customers are getting real value.",tip:"Know these terms by name. They come up often."},
- {id:"e1",c:"se",q:"Explain a technical concept to me as if I were a non-technical customer.",want:"Clarity, an analogy, and checking for understanding.",a:"Pick something you know well, like RAG: \"Imagine a new library staff member who's smart but hasn't read the policy binder. Instead of guessing, they look up the right page first and then answer. That's what our assistant does: it finds the relevant policy, then explains it in plain English.\" Then check in: \"Does that match how your team looks up answers today?\"",tip:"Practice this one out loud a lot. It's the core of solutions and enablement roles."},
- {id:"e2",c:"se",q:"Walk me through a demo of a product you've built.",want:"A story built around the user's problem, not a feature tour.",a:"Start with the problem: \"Library staff spend time digging through long policy documents.\" Show one realistic task end to end: ask a real question and get a sourced answer. Point out one detail that builds trust, like the citation. End with the impact and what you'd build next. Keep it to 5–10 minutes and leave time for questions.",tip:"Have Ask BPL ready to demo with a backup recording in case the live demo fails."},
+ {id:"e1",c:"se",q:"Explain a technical concept to me as if I were a non-technical customer.",want:"Clarity, an analogy, and checking for understanding.",a:"Pick something you know well, like RAG: \"Imagine a new employee who's smart but hasn't read the policy binder. Instead of guessing, they look up the right page first and then answer. That's what our assistant does: it finds the relevant policy, then explains it in plain English.\" Then check in: \"Does that match how your team looks up answers today?\"",tip:"Practice this one out loud a lot. It's the core of solutions and enablement roles."},
+ {id:"e2",c:"se",q:"Walk me through a demo of a product you've built.",want:"A story built around the user's problem, not a feature tour.",a:"Start with the problem: [what your users struggled with]. Show one realistic task end to end in {{project}}. Point out one detail that builds trust, like [a citation, a confirmation, an undo]. End with the impact and what you'd build next. Keep it to 5–10 minutes and leave time for questions.",tip:"Have {{project}} ready to demo, with a backup recording in case the live demo fails."},
  {id:"e3",c:"se",q:"A prospect asks a technical question you can't answer. What do you do?",want:"Honesty plus a reliable follow-up.",a:"I'd say: \"That's a great question, and I want to give you an accurate answer rather than guess. Let me confirm with our engineering team and get back to you by [day].\" Then I'd write it down, get the answer, and follow up when I said I would. Trust matters more than looking like you know everything.",tip:""},
- {id:"e4",c:"se",q:"How would you find out what a customer actually needs?",want:"Discovery questions, listening, and confirming.",a:"I'd ask open questions: What does your team do today? What's slow or frustrating? What would success look like six months from now? Who else is affected? Then I'd summarize what I heard back to them to confirm, before suggesting any solution.",tip:"Your hospitality instincts help here. Reading a table is discovery."},
+ {id:"e4",c:"se",q:"How would you find out what a customer actually needs?",want:"Discovery questions, listening, and confirming.",a:"I'd ask open questions: What does your team do today? What's slow or frustrating? What would success look like six months from now? Who else is affected? Then I'd summarize what I heard back to them to confirm, before suggesting any solution.",tip:"Customer-facing experience helps here. Reading what someone needs is discovery."},
  {id:"b8",c:"behavioral",star:1,q:"Tell me about a time you improved a process.",want:"You spot inefficiency and fix it with measurable results.",a:"S: At [venue], [a process] was slow or error-prone.\nT: I wanted to make it faster and more consistent for the team.\nA: I [mapped the steps, removed one, created a checklist or tool, trained the team on it].\nR: [Measurable result: saved time, fewer errors, better reviews].",tip:"Process improvement maps directly to implementation and AI ops roles."},
- {id:"b9",c:"behavioral",star:1,q:"Tell me about a time you used data to make a decision.",want:"You look at evidence, not just instinct.",a:"S: At [Goldbelly / Eataly], we noticed [a pattern: complaints, slow nights, staffing gaps].\nT: I needed to decide [what to change].\nA: I looked at [reservations, sales reports, ticket counts] and found [insight].\nR: We [changed X], which led to [result].",tip:"Even simple data counts: covers per night, ticket volume, review scores."},
- {id:"o7",c:"opening",q:"You're new to tech. Why should we hire you?",want:"Confidence about your transition.",a:"I'm newer to tech, but not new to work. I've managed four venues, trained staff and handled thousands of customers, which is client management and enablement under pressure. And I've shipped real AI tools, like Ask BPL for Brooklyn Public Library. I bring people skills that are hard to teach, and I've proven I can learn the technical side quickly.",tip:"Expect this question. Say it with confidence, not apology."},
+ {id:"b9",c:"behavioral",star:1,q:"Tell me about a time you used data to make a decision.",want:"You look at evidence, not just instinct.",a:"S: At [company], we noticed [a pattern: complaints, slow days, staffing gaps].\nT: I needed to decide [what to change].\nA: I looked at [sales reports, ticket counts, survey results] and found [insight].\nR: We [changed X], which led to [result].",tip:"Even simple data counts: covers per night, ticket volume, review scores."},
+ {id:"o7",c:"opening",q:"You're new to tech. Why should we hire you?",want:"Confidence about your transition.",a:"I'm newer to tech, but not new to work. In {{background}} I [managed people / trained staff / handled hundreds of customers], which is [the tech skill it maps to, like client management or enablement]. And I've shipped real work, like {{project}}. I bring people skills that are hard to teach, and I've proven I can learn the technical side quickly.",tip:"Expect this question. Say it with confidence, not apology."},
  {id:"o8",c:"opening",q:"What questions do you have for us?",want:"Curiosity and real interest in the job.",a:"What does success look like in the first 90 days?\nWhat's the biggest challenge the team is working on right now?\nHow does the team use AI tools day to day?\nWhat do you enjoy most about working here?\nWhat are the next steps in the process?",tip:"Always ask at least two. Never say \"No, I think you covered everything.\""}
 ];
 const QUIZ = [
@@ -83,19 +83,55 @@ const CODE = [
 ];
 
 /* ---------- STATE ---------- */
-const KEY="callback-coach-v1";
-const DEFAULTS=()=>({xp:0,ratings:{},solved:{},days:[],quizBest:0,seq:0,session:null,history:[]});
+const BASE_KEY="callback-coach-v1", ACTIVE_KEY="callback-coach-active";
+const ACCOUNTS=!!(window.FIREBASE_CONFIG&&window.FIREBASE_CONFIG.apiKey);
+// When accounts are on, reopen the last signed-in user's local copy so there's no flash of guest data.
+let KEY=BASE_KEY;
+try{if(ACCOUNTS) KEY=localStorage.getItem(ACTIVE_KEY)||BASE_KEY;}catch(e){}
+const DEFAULTS=()=>({xp:0,ratings:{},solved:{},days:[],quizBest:0,seq:0,session:null,history:[],updatedAt:0,profile:{},answers:{}});
 let S=DEFAULTS();
 let firstVisit=true;
 try{const raw=localStorage.getItem(KEY); if(raw){firstVisit=false;S=Object.assign(S,JSON.parse(raw));}}catch(e){}
 function newSession(){S.seq=(S.seq||0)+1;return {id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),n:S.seq,name:"",started:Date.now(),attempts:[],quizzes:[],code:[]};}
-function ensureSession(){if(!Array.isArray(S.history)) S.history=[]; if(!S.session) S.session=newSession();}
+function ensureSession(){if(!Array.isArray(S.history)) S.history=[]; if(!S.session) S.session=newSession(); if(!S.profile) S.profile={}; if(!S.answers) S.answers={};}
 ensureSession();
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
-save();
+function writeLocal(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function save(){S.updatedAt=Date.now();writeLocal();if(window.CC&&CC.onSave) CC.onSave();}
+writeLocal();
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const LEVELS=[[0,"Extra"],[60,"Understudy"],[180,"Ensemble"],[360,"Featured"],[600,"Lead"],[900,"Headliner"]];
+/* ---------- PERSONALIZATION ----------
+   Sample answers are general templates. {{key}} slots fill in from the user's profile;
+   [brackets] are details only the user can supply. Editing the profile or saving your own
+   answers needs a login when accounts are set up (anyone can when they aren't). */
+const TOK={
+  name:["your name","Your name","Jordan Rivera"],
+  background:["your field","Field you're coming from","hospitality, teaching, retail, healthcare…"],
+  recentRole:["your most recent role","Most recent role","operations manager at a restaurant group"],
+  program:["your training program","Training, program or degree","a full-stack bootcamp"],
+  project:["your best project","Best project (name)","ShiftMate"],
+  projectWhat:["what your project does","What it does, in one line","an app that helps volunteers sign up for shifts"],
+  goal:["what you want to do next","What you want to do next","building tools that make customers' lives easier"],
+  location:["your city","Where you're based","Chicago, IL"],
+  startDate:["your start date","When you can start","two weeks after an offer"],
+  salary:["your salary range","Target salary range","$70,000 to $85,000"],
+  linkedin:["your LinkedIn","LinkedIn URL","linkedin.com/in/your-name"]
+};
+let signedIn=KEY!==BASE_KEY;
+const canEdit=()=>!ACCOUNTS||signedIn;
+const pv=k=>((S.profile||{})[k]||"").trim();
+const TOKRE=/\{\{(\w+)\}\}|\[([^\]\n]+)\]/g;
+function fillHTML(t){
+  return esc(t).replace(TOKRE,(m,k,br)=>br!==undefined?`<mark class="ph">[${br}]</mark>`:pv(k)?`<span class="fill">${esc(pv(k))}</span>`:`<mark class="ph">[${TOK[k]?TOK[k][0]:k}]</mark>`);
+}
+function fillText(t){return t.replace(/\{\{(\w+)\}\}/g,(m,k)=>pv(k)||"["+(TOK[k]?TOK[k][0]:k)+"]");}
+const qText=q=>fillText(q.q);
+function renderTokens(){
+  document.querySelectorAll("[data-tok]").forEach(el=>{const k=el.dataset.tok;el.innerHTML=pv(k)?esc(pv(k)):`<mark class="ph">[${TOK[k][0]}]</mark>`;});
+}
+function openLogin(){const b=$("#loginBtn"); if(b&&!$("#acct").hidden&&!b.hidden) b.click(); else toast("Log in to personalize");}
+
 function today(){const d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
 function streak(){
   const set=new Set(S.days); let n=0; const d=new Date();
@@ -120,7 +156,13 @@ document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()
   document.querySelectorAll("[role=tabpanel]").forEach(p=>p.hidden=p.id!=="p-"+b.dataset.tab);
   stopTimer();
   if(b.dataset.tab==="progress") renderProgress();
+  if(b.dataset.tab==="profile") renderProfile();
+  if(b.dataset.tab==="mock"&&!mk) renderMock();
+  b.scrollIntoView({block:"nearest",inline:"nearest"});
 }));
+// Fade the tab bar's edges when more tabs are hidden off-screen (phones).
+const navEl=$("nav"), navFade=()=>{navEl.classList.toggle("more-l",navEl.scrollLeft>4);navEl.classList.toggle("more-r",navEl.scrollLeft+navEl.clientWidth<navEl.scrollWidth-4);};
+navEl.addEventListener("scroll",navFade,{passive:true}); addEventListener("resize",navFade); navFade();
 $("#sessStat").onclick=()=>$("#t-progress").click();
 document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>{$("#t-"+b.dataset.go).click();window.scrollTo(0,0);}));
 
@@ -139,7 +181,7 @@ function bindTimer(id,secs=90,autostart=false){
 }
 
 /* ---------- PRACTICE ---------- */
-let cat="opening", order=[], idx=0, revealed=false;
+let cat="opening", order=[], idx=0, revealed=false, editingAns=false;
 const weight=id=>({l:3,m:2,g:1}[S.ratings[id]]||2.5);
 function buildDeck(){
   const list=QS.filter(q=>q.c===cat);
@@ -151,7 +193,7 @@ function renderCats(){
     const n=QS.filter(q=>q.c===k).length, done=QS.filter(q=>q.c===k&&S.ratings[q.id]==="g").length;
     return `<button class="chip" aria-pressed="${k===cat}" data-c="${k}">${v}<span class="n">${done}/${n}</span></button>`;
   }).join("");
-  document.querySelectorAll("#cats .chip").forEach(b=>b.onclick=()=>{cat=b.dataset.c;buildDeck();renderCats();renderCard();});
+  document.querySelectorAll("#cats .chip").forEach(b=>b.onclick=()=>{cat=b.dataset.c;editingAns=false;buildDeck();renderCats();renderCard();});
 }
 function renderCard(){
   stopTimer();
@@ -159,7 +201,7 @@ function renderCard(){
   const star=q.star?`<div class="star" role="group" aria-label="STAR checklist">${[["S","Situation"],["T","Task"],["A","Action"],["R","Result"]].map(([l,n])=>`<label><input type="checkbox" id="st-${l}"><b>${l}</b>${n}</label>`).join("")}</div>`:"";
   $("#pcard").innerHTML=`
     <div class="cardtop"><span class="tag">${CATS[q.c]}</span><span class="count">Card ${idx+1} of ${order.length}</span>${timerHTML("pt")}</div>
-    <p class="q">${esc(q.q)}</p>
+    <p class="q">${fillHTML(q.q)}</p>
     <p class="want"><b>What they're listening for:</b> ${esc(q.want)}</p>
     ${star}
     <label for="ans" class="tip">Jot your key points (optional), then say it out loud.</label>
@@ -172,20 +214,43 @@ function renderCard(){
 function renderReveal(){
   const q=order[idx];
   if(!revealed){
-    $("#rev").innerHTML=`<div class="row"><button class="btn primary" id="show">Show sample answer</button><button class="btn ghost" id="skip">Skip</button></div>`;
+    $("#rev").innerHTML=`<div class="row"><button class="btn primary" id="show">${S.answers[q.id]?"Show my answer":"Show sample answer"}</button><button class="btn ghost" id="skip">Skip</button></div>`;
     $("#show").onclick=()=>{revealed=true;stopTimer();renderReveal();};
     $("#skip").onclick=next;
     return;
   }
+  const mine=S.answers[q.id];
+  const sample=`<div class="sample"><h4>Sample answer${mine?"":" · make it yours"}</h4>${fillHTML(q.a)}</div>`;
+  let body;
+  if(editingAns) body=`<div class="mybox"><label for="myans"><b>Your answer</b> <span class="tip">Write it the way you'd say it. Replace anything in [brackets].</span></label>
+      <textarea id="myans">${esc(mine??fillText(q.a))}</textarea>
+      <div class="row"><button class="btn primary" id="mySave">Save my answer</button><button class="btn ghost" id="myCancel">Cancel</button>${mine?`<button class="btn ghost" id="myDel">Delete mine, use the sample</button>`:""}</div></div>
+    <details><summary class="tip">Show the sample for reference</summary>${sample}</details>`;
+  else if(mine) body=`<div class="sample mine"><h4>Your answer</h4>${esc(mine)}</div>
+    <div class="row"><button class="btn" id="myEdit">Edit my answer</button></div>
+    <details><summary class="tip">Compare with the sample</summary>${sample}</details>`;
+  else body=`${sample}<div class="row"><button class="btn" id="myEdit">${canEdit()?"Write my own version":"Log in to save your own version"}</button></div>`;
   $("#rev").innerHTML=`
-    <div class="sample"><h4>Sample answer · make it yours</h4>${esc(q.a)}</div>
-    ${q.tip?`<p class="tip"><b>Coach's note:</b> ${esc(q.tip)}</p>`:""}
+    ${body}
+    ${q.tip?`<p class="tip"><b>Coach's note:</b> ${fillHTML(q.tip)}</p>`:""}
     <p class="tip" style="margin:0">How did that go?</p>
     <div class="rate">
       <button class="g" data-r="g">Nailed it<small>+10 XP</small></button>
       <button class="m" data-r="m">Getting there<small>+5 XP</small></button>
       <button class="l" data-r="l">Practice more<small>+2 XP</small></button>
     </div>`;
+  if($("#myEdit")) $("#myEdit").onclick=()=>{if(!canEdit()) return openLogin(); editingAns=true; renderReveal(); $("#myans").focus();};
+  if($("#myCancel")) $("#myCancel").onclick=()=>{editingAns=false; renderReveal();};
+  if($("#mySave")) $("#mySave").onclick=()=>{
+    if(!canEdit()) return openLogin();
+    const t=$("#myans").value.trim();
+    if(t) S.answers[q.id]=t; else delete S.answers[q.id];
+    save(); editingAns=false; renderReveal(); toast(t?"Your answer is saved":"Using the sample answer");
+  };
+  if($("#myDel")) $("#myDel").onclick=()=>{
+    if(!confirm("Delete your version of this answer?")) return;
+    delete S.answers[q.id]; save(); editingAns=false; renderReveal();
+  };
   document.querySelectorAll(".rate button").forEach(b=>b.onclick=()=>{
     const r=b.dataset.r; S.ratings[q.id]=r;
     logAttempt(q,r,$("#ans").value,ELAP.pt,"cards");
@@ -193,9 +258,9 @@ function renderReveal(){
     renderCats(); next();
   });
 }
-function next(){idx=(idx+1)%order.length; if(idx===0) buildDeck(); revealed=false; renderCard();}
+function next(){idx=(idx+1)%order.length; if(idx===0) buildDeck(); revealed=false; editingAns=false; renderCard();}
 function renderDots(){
-  $("#pdots").innerHTML=order.map((q,i)=>`<span class="dot ${S.ratings[q.id]||""} ${i===idx?"cur":""}" title="${esc(q.q)}"></span>`).join("");
+  $("#pdots").innerHTML=order.map((q,i)=>`<span class="dot ${S.ratings[q.id]||""} ${i===idx?"cur":""}" title="${esc(qText(q))}"></span>`).join("");
 }
 
 /* ---------- QUIZ ---------- */
@@ -280,7 +345,7 @@ function renderMock(){
       <h2>Mock recruiter pre-screen</h2>
       <p class="lede">Seven questions in the order a real 20–30 minute recruiter screen usually follows: an opener, two behavioral, one logistics, two for your target role, and the closing "Do you have questions for us?" Each gets a 90-second clock that starts on its own. Sit up, look at the camera and answer out loud as if it's the real call. Recording yourself on your phone is the fastest way to improve.</p>
       <div class="row"><label for="role">Target role</label>
-      <select id="role">${Object.entries(ROLE).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select>
+      <select id="role">${Object.entries(ROLE).map(([k,v])=>`<option value="${k}" ${pv("role")===k?"selected":""}>${v}</option>`).join("")}</select>
       <button class="btn primary" id="go">Start the screen</button></div>
     </div>`;
     $("#go").onclick=()=>{
@@ -306,11 +371,11 @@ function renderMock(){
   m.innerHTML=`<div class="card">
     <div class="cardtop"><span class="tag">Recruiter · ${CATS[q.c]}</span><span class="count">${mk.i+1} of ${mk.qs.length}</span>${timerHTML("mt")}</div>
     <div class="meter"><i style="width:${mk.i/mk.qs.length*100}%"></i></div>
-    <p class="q">"${esc(q.q)}"</p>
+    <p class="q">"${fillHTML(q.q)}"</p>
     <p class="want"><b>Listening for:</b> ${esc(q.want)}</p>
     <label for="mans" class="tip">Key points you said (optional, saved to your session)</label>
     <textarea id="mans" placeholder="My answer…"></textarea>
-    <div id="msamp">${mk.show?`<div class="sample"><h4>Sample answer</h4>${esc(q.a)}</div>`:""}</div>
+    <div id="msamp">${mk.show?(S.answers[q.id]?`<div class="sample mine"><h4>Your answer</h4>${esc(S.answers[q.id])}</div>`:`<div class="sample"><h4>Sample answer</h4>${fillHTML(q.a)}</div>`):""}</div>
     <p class="tip" style="margin:0">Rate this answer to save it and move on:</p>
     <div class="rate" id="mrate">
       <button class="g" data-r="g">Nailed it<small>+10 XP</small></button>
@@ -318,7 +383,7 @@ function renderMock(){
       <button class="l" data-r="l">Practice more<small>+2 XP</small></button>
     </div>
     <div class="row">
-      <button class="btn" id="peek">${mk.show?"Hide sample":"Peek at sample"}</button>
+      <button class="btn" id="peek">${mk.show?"Hide answer":S.answers[q.id]?"Peek at my answer":"Peek at sample"}</button>
       <button class="btn ghost" id="mn">${mk.i===mk.qs.length-1?"Finish without rating":"Skip rating"}</button>
     </div></div>`;
   $("#mans").value=mk.notes[mk.i]||"";
@@ -389,7 +454,7 @@ function sessDetail(s){
   let h="";
   for(const [k,v] of Object.entries(CATS)){
     const xs=s.attempts.filter(a=>a.c===k); if(!xs.length) continue;
-    h+=`<div class="hgroup"><h4>${v}</h4>${xs.map(a=>{const q=QS.find(x=>x.id===a.q);return `<div class="hq">${esc(q?q.q:a.q)}</div>${answerBox(a)}`;}).join("")}</div>`;
+    h+=`<div class="hgroup"><h4>${v}</h4>${xs.map(a=>{const q=QS.find(x=>x.id===a.q);return `<div class="hq">${esc(q?qText(q):a.q)}</div>${answerBox(a)}`;}).join("")}</div>`;
   }
   if(s.quizzes.length) h+=`<div class="hgroup"><h4>Quick quiz</h4>${s.quizzes.map(z=>`<div class="ans"><div class="meta"><span>${fmtDT(z.at)}</span></div><b>${z.score} / ${z.total}</b>${z.missed.length?"\nMissed: "+z.missed.map(esc).join(" · "):"\nNo misses"}</div>`).join("")}</div>`;
   if(s.code.length) h+=`<div class="hgroup"><h4>Code warm-ups</h4>${s.code.map(c=>{const p=CODE.find(x=>x.id===c.id);return `<div class="hq">${esc(p?p.t:c.id)}</div><div class="ans"><div class="meta"><span>${HELP[c.help][1]}</span>${c.secs?`<span>${fmtT(c.secs)} on the clock</span>`:""}<span>${fmtDT(c.at)}</span></div><pre>${esc(c.text||"")}</pre></div>`;}).join("")}</div>`;
@@ -423,7 +488,7 @@ function renderProgress(){
       <div class="row"><label for="ca">From</label><select id="ca">${opt(cmpA)}</select><label for="cb">to</label><select id="cb">${opt(cmpB)}</select></div>
       <div class="legend"><span><i class="ca"></i>${esc(sessLabel(A))}</span><span><i class="cb"></i>${esc(sessLabel(B))}</span></div>
       <div class="cmp">${rows||`<p class="tip" style="margin:0">Neither session has scores yet.</p>`}</div>
-      ${both.length?`<h3 style="margin-top:8px">Same question, both sessions</h3>${both.map(q=>`<div class="qpair"><b>${esc(q.q)}</b><div class="grid2" style="gap:10px">${answerBox(lastA[q.id])}${answerBox(lastB[q.id])}</div></div>`).join("")}`:`<p class="tip" style="margin:0">Answer the same question in both sessions to see your answers side by side.</p>`}
+      ${both.length?`<h3 style="margin-top:8px">Same question, both sessions</h3>${both.map(q=>`<div class="qpair"><b>${esc(qText(q))}</b><div class="grid2" style="gap:10px">${answerBox(lastA[q.id])}${answerBox(lastB[q.id])}</div></div>`).join("")}`:`<p class="tip" style="margin:0">Answer the same question in both sessions to see your answers side by side.</p>`}
     </div>`;
   }
 
@@ -463,8 +528,7 @@ function renderProgress(){
       const d=JSON.parse(t);
       if(!d||!Array.isArray(d.history)) throw 0;
       if(!confirm("Replace your current progress with this backup?")) return;
-      S=Object.assign(DEFAULTS(),d); ensureSession(); save();
-      cmpA=cmpB=null; buildDeck(); renderCats(); renderCard(); renderQuiz(); renderPlist(); renderCode(); renderStats(); renderProgress();
+      applyState(d); save();
       toast("Backup restored");
     }).catch(()=>toast("That file isn't a Callback Coach backup"));
   };
@@ -476,6 +540,96 @@ $("#copyEmail").onclick=()=>{
     const r=document.createRange(); r.selectNodeContents($("#email")); const s=getSelection(); s.removeAllRanges(); s.addRange(r); toast("Selected. Copy with Ctrl/Cmd+C");
   });
 };
+/* ---------- PROFILE ---------- */
+function renderProfile(){
+  const el=$("#profile");
+  if(!canEdit()){
+    el.innerHTML=`<div class="stage">
+      <span class="tag" style="align-self:flex-start">Make it yours</span>
+      <h2>Personalize your practice</h2>
+      <p class="lede">With a free account you can add your background, best project and goals. They fill into the sample answers, the playbook and the thank-you email automatically. You can also save your own version of any answer, and it all follows you to any device.</p>
+      <div class="row"><button class="btn primary" id="profLogin">Log in or create a free account</button></div>
+    </div>
+    <div class="card"><h3>Here's the idea</h3>
+      <p class="tip" style="margin:0">Without a profile, answers show <mark class="ph">[highlighted slots]</mark> for you to fill in out loud. With one, they read like this:</p>
+      <div class="sample"><h4>Tell me about yourself · preview</h4>I've spent most of my career in <span class="fill">teaching</span>. Most recently I was <span class="fill">a 7th-grade science teacher</span>, where I <mark class="ph">[one thing you're proud of]</mark>…</div></div>`;
+    $("#profLogin").onclick=openLogin;
+    return;
+  }
+  const P=S.profile, mine=QS.filter(q=>S.answers[q.id]);
+  const field=k=>`<label class="field">${TOK[k][1]}<input type="text" data-k="${k}" value="${esc(P[k]||"")}" placeholder="e.g. ${esc(TOK[k][2])}" maxlength="160"></label>`;
+  el.innerHTML=`
+    <div class="card"><h3>About you</h3>
+      <p class="tip" style="margin:0">These fill into the <mark class="ph">[highlighted slots]</mark> in sample answers, the playbook and the thank-you email. Leave anything blank to keep the slot. Changes save automatically${ACCOUNTS?" to your account":" in this browser"}.</p>
+      <div class="pgrid">
+        ${field("name")}
+        <label class="field">Target role<select data-k="role"><option value="">Not sure yet</option>${Object.entries(ROLE).map(([k,v])=>`<option value="${k}" ${P.role===k?"selected":""}>${v}</option>`).join("")}</select></label>
+        ${["background","recentRole","program","goal","project","projectWhat","location","startDate","salary","linkedin"].map(field).join("")}
+      </div></div>
+    <div class="card"><h3>Preview</h3>
+      <div class="sample" id="profPrev"></div>
+      <p class="tip" style="margin:0">Highlighted parts are details only you can add. Say them out loud, or save your own version of the answer in Question cards.</p></div>
+    <div class="card"><h3>Your answers <span class="count">${mine.length} of ${QS.length}</span></h3>
+      ${mine.length?mine.map(q=>`<div class="qpair"><b>${esc(qText(q))}</b><div class="ans">${esc(S.answers[q.id])}</div><div class="row"><button class="btn ghost" data-delans="${q.id}">Delete</button></div></div>`).join(""):`<p class="tip" style="margin:0">None yet. In Question cards, reveal an answer and choose <b>Write my own version</b>. Your answers replace the samples everywhere, including the mock pre-screen.</p>`}</div>
+    <div class="card"><h3>Profile file</h3>
+      <p class="tip" style="margin:0">Save your profile and answers as a file, or load one. Loading adds to what's here and replaces matching fields and answers. Your practice history isn't affected.</p>
+      <div class="row"><button class="btn" id="pexp">Export profile</button><button class="btn" id="pimpB">Import profile</button><input type="file" id="pimp" accept="application/json,.json" hidden></div></div>`;
+  const prev=()=>{$("#profPrev").innerHTML=`<h4>Tell me about yourself</h4>${fillHTML(QS[0].a)}`;};
+  prev();
+  let t;
+  el.querySelectorAll("[data-k]").forEach(inp=>inp.addEventListener(inp.tagName==="SELECT"?"change":"input",()=>{
+    const v=inp.value.trim(); if(v) S.profile[inp.dataset.k]=v; else delete S.profile[inp.dataset.k];
+    prev(); renderTokens(); clearTimeout(t); t=setTimeout(save,400);
+  }));
+  el.querySelectorAll("[data-delans]").forEach(b=>b.onclick=()=>{
+    if(!confirm("Delete your version of this answer?")) return;
+    delete S.answers[b.dataset.delans]; save(); renderProfile();
+  });
+  $("#pexp").onclick=()=>{
+    const data={type:"callback-coach-profile",version:1,profile:S.profile,answers:S.answers};
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}), a=document.createElement("a");
+    a.href=URL.createObjectURL(blob); a.download="callback-coach-profile.json";
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  };
+  $("#pimpB").onclick=()=>$("#pimp").click();
+  $("#pimp").onchange=e=>{
+    const f=e.target.files[0]; if(!f) return;
+    f.text().then(txt=>{
+      const d=JSON.parse(txt);
+      const prof=d.profile||{}, ans=d.answers||{};
+      if(typeof prof!=="object"||typeof ans!=="object") throw 0;
+      const n=Object.keys(ans).filter(k=>QS.some(q=>q.id===k)).length;
+      if(!confirm(`Load this profile and ${n} answer${n===1?"":"s"}?`)) return;
+      for(const [k,v] of Object.entries(prof)) if((k in TOK||k==="role")&&typeof v==="string"&&v.trim()) S.profile[k]=v.trim().slice(0,160);
+      for(const [k,v] of Object.entries(ans)) if(QS.some(q=>q.id===k)&&typeof v==="string"&&v.trim()) S.answers[k]=v.trim();
+      save(); renderTokens(); renderProfile(); if(revealed) renderReveal();
+      toast("Profile loaded");
+    }).catch(()=>toast("That file isn't a Callback Coach profile"));
+  };
+}
+
+/* ---------- ACCOUNT BRIDGE (used by auth.js) ---------- */
+function applyState(obj){
+  stopTimer(); saveDraft();
+  S=Object.assign(DEFAULTS(),obj||{}); ensureSession(); writeLocal();
+  qz=null; mk=null; cmpA=cmpB=null; drafts={};
+  editingAns=false;
+  buildDeck(); renderCats(); renderCard(); renderQuiz(); renderPlist(); renderCode(); renderMock(); renderStats(); renderTokens();
+  if(!$("#p-progress").hidden) renderProgress();
+  if(!$("#p-profile").hidden) renderProfile();
+}
+window.CC={
+  BASE_KEY,
+  get state(){return S;},
+  get key(){return KEY;},
+  useKey(k){KEY=k;try{if(k===BASE_KEY) localStorage.removeItem(ACTIVE_KEY); else localStorage.setItem(ACTIVE_KEY,k);}catch(e){}},
+  readLocal(k){try{const r=localStorage.getItem(k);return r?JSON.parse(r):null;}catch(e){return null;}},
+  hasProgress:o=>!!o&&(o.xp>0||(o.history||[]).length>0||(o.session&&((o.session.attempts||[]).length||(o.session.quizzes||[]).length||(o.session.code||[]).length))>0),
+  applyState, toast,
+  setSignedIn(v){signedIn=!!v; editingAns=false; if(revealed) renderReveal(); if(!$("#p-profile").hidden) renderProfile();},
+  onSave:null
+};
+
 /* ---------- BOOT ---------- */
-buildDeck(); renderCats(); renderCard(); renderQuiz(); renderPlist(); renderCode(); renderMock(); renderStats();
+buildDeck(); renderCats(); renderCard(); renderQuiz(); renderPlist(); renderCode(); renderMock(); renderStats(); renderTokens();
 if(firstVisit) $("#t-guide").click();
