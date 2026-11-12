@@ -102,6 +102,7 @@ button:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px sol
 .opt.wrong{border-color:var(--low);background:color-mix(in srgb,var(--low) 12%,var(--surface))}
 .feedback{padding:12px 14px;border-radius:10px;background:var(--bg)}
 .feedback b.ok{color:var(--good)} .feedback b.no{color:var(--low)}
+.qreview{display:flex;flex-direction:column;gap:8px;margin-top:4px}
 .meter{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
 .meter i{display:block;height:100%;background:var(--spot);border-radius:99px;transition:width .3s}
 pre{margin:0;background:var(--code-bg);color:var(--code-fg);padding:14px 16px;border-radius:10px;overflow-x:auto;font-family:var(--mono);font-size:.84rem;line-height:1.55}
@@ -121,6 +122,10 @@ select{font:inherit;padding:9px 12px;border-radius:10px;border:1px solid var(--l
 .checklist{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:999px;font-weight:700;opacity:0;transition:.25s;pointer-events:none;z-index:20}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast{width:max-content;max-width:calc(100vw - 32px);text-align:center}
+.toast.act{pointer-events:auto;display:flex;align-items:center;gap:6px}
+.toast .undo{font:inherit;font-weight:800;background:none;border:0;color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px 6px;border-radius:6px}
+.toast .undo:focus-visible{outline:3px solid var(--spot);outline-offset:1px}
 .sum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .sum div{border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
 .sum b{display:block;font-family:var(--display);font-size:1.6rem;font-variant-numeric:tabular-nums}
@@ -244,6 +249,7 @@ dialog form{display:flex;flex-direction:column;gap:14px}
   .stats{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
   .stat{min-width:0;padding:3px 2px;gap:0;line-height:1.2}
   .stat b{font-size:.98rem}
+  #lvl{font-size:.8rem;line-height:1.5}
   .stat span{font-size:.6rem;letter-spacing:.03em;white-space:nowrap}
   .brand small{display:none}
   .lamp{width:28px;height:28px}

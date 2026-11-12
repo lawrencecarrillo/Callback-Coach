@@ -139,16 +139,44 @@ function streak(){
   while(set.has(d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate())){n++;d.setDate(d.getDate()-1);}
   return n;
 }
-function award(n,msg){
+function award(n,msg,undo){
   S.xp+=n; if(!S.days.includes(today())) S.days.push(today()); save(); renderStats();
-  toast("+"+n+" XP · "+msg);
+  if(undo) offerUndo("+"+n+" XP · "+msg,undo.snap,undo.then); else toast("+"+n+" XP · "+msg);
+}
+const unaward=n=>{S.xp=Math.max(0,S.xp-n);};
+
+/* ---------- UNDO ----------
+   Take a snapshot before an action, then offerUndo() after it. The toast shows an Undo button
+   for a few seconds. Undo only works if nothing else has changed since, so it can never wipe out
+   later work. */
+const snapshot=()=>JSON.stringify(S);
+function offerUndo(msg,snap,then){
+  const mark=S.updatedAt;
+  toast(msg,()=>{
+    if(S.updatedAt!==mark){toast("Too late to undo. Something else changed since.");return;}
+    S=Object.assign(DEFAULTS(),JSON.parse(snap)); ensureSession(); save();
+    renderStats(); renderCats(); renderPlist(); renderTokens();
+    if(then) then();
+    toast("Undone");
+  });
 }
 function renderStats(){
   $("#xp").textContent=S.xp;
   let l=LEVELS[0][1]; for(const [min,name] of LEVELS) if(S.xp>=min) l=name;
   $("#lvl").textContent=l; $("#streak").textContent=streak(); $("#sess").textContent=S.session.n;
 }
-let tt; function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("show"),1800);}
+let tt, undoFn=null;
+function toast(m,undo){
+  const t=$("#toast"); undoFn=undo||null; clearTimeout(tt);
+  t.textContent=m;
+  if(undo){
+    const b=document.createElement("button"); b.className="undo"; b.textContent="Undo";
+    b.onclick=()=>{const f=undoFn; undoFn=null; t.classList.remove("show","act"); clearTimeout(tt); if(f) f();};
+    t.append(" ",b);
+  }
+  t.classList.toggle("act",!!undo); t.classList.add("show");
+  tt=setTimeout(()=>{t.classList.remove("show","act"); undoFn=null;},undo?7000:1800);
+}
 
 /* ---------- TABS ---------- */
 document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{
@@ -244,18 +272,25 @@ function renderReveal(){
   if($("#myCancel")) $("#myCancel").onclick=()=>{editingAns=false; renderReveal();};
   if($("#mySave")) $("#mySave").onclick=()=>{
     if(!canEdit()) return openLogin();
-    const t=$("#myans").value.trim();
+    const t=$("#myans").value.trim(), snap=snapshot();
     if(t) S.answers[q.id]=t; else delete S.answers[q.id];
-    save(); editingAns=false; renderReveal(); toast(t?"Your answer is saved":"Using the sample answer");
+    save(); editingAns=false; renderReveal();
+    offerUndo(t?"Your answer is saved":"Using the sample answer",snap,()=>{if(order[idx]===q&&revealed) renderReveal();});
   };
   if($("#myDel")) $("#myDel").onclick=()=>{
-    if(!confirm("Delete your version of this answer?")) return;
+    const snap=snapshot();
     delete S.answers[q.id]; save(); editingAns=false; renderReveal();
+    offerUndo("Your answer was deleted",snap,()=>{if(order[idx]===q&&revealed) renderReveal();});
   };
-  document.querySelectorAll(".rate button").forEach(b=>b.onclick=()=>{
-    const r=b.dataset.r; S.ratings[q.id]=r;
-    logAttempt(q,r,$("#ans").value,ELAP.pt,"cards");
-    award({g:10,m:5,l:2}[r],{g:"Bravo!",m:"Nice rep",l:"Every rehearsal counts"}[r]);
+  document.querySelectorAll("#rev .rate button").forEach(b=>b.onclick=()=>{
+    const r=b.dataset.r, snap=snapshot(), notes=$("#ans").value, back={order:[...order],idx,cat};
+    S.ratings[q.id]=r;
+    logAttempt(q,r,notes,ELAP.pt,"cards");
+    award({g:10,m:5,l:2}[r],{g:"Bravo!",m:"Nice rep",l:"Every rehearsal counts"}[r],{snap,then:()=>{
+      // Go back to the card that was rated, answer revealed, so it can be re-rated.
+      cat=back.cat; order=back.order; idx=back.idx; revealed=true; editingAns=false;
+      renderCats(); renderCard(); $("#ans").value=notes;
+    }});
     renderCats(); next();
   });
 }
@@ -266,37 +301,61 @@ function renderDots(){
 
 /* ---------- QUIZ ---------- */
 let qz=null;
-function newQuiz(){
-  qz={items:[...QUIZ].sort(()=>Math.random()-.5).slice(0,10),i:0,score:0,picked:null,missed:[],logged:false};
-  renderQuiz();
-}
+const freshQuiz=items=>({items,i:0,score:0,picked:null,picks:[],missed:[],logged:null});
+function newQuiz(){qz=freshQuiz([...QUIZ].sort(()=>Math.random()-.5).slice(0,10)); renderQuiz();}
 function renderQuiz(){
   const c=$("#qcard");
   if(!qz){c.innerHTML=`<p class="q">Ready for 10 questions?</p><p class="want">Best score so far: <b>${S.quizBest}/10</b></p><div class="row"><button class="btn primary" id="qs">Start quiz</button></div>`;$("#qs").onclick=newQuiz;return;}
   if(qz.i>=qz.items.length){
     if(qz.score>S.quizBest){S.quizBest=qz.score;}
-    if(!qz.logged){qz.logged=true;S.session.quizzes.push({at:Date.now(),score:qz.score,total:qz.items.length,missed:qz.missed});}
+    if(!qz.logged){qz.logged={at:Date.now(),score:qz.score,total:qz.items.length,missed:qz.missed}; S.session.quizzes.push(qz.logged);}
     save();
     const msg=qz.score>=9?"Standing ovation.":qz.score>=7?"Strong show. Review the misses and run it again.":"Good rehearsal. Run it again tomorrow and watch the score climb.";
-    c.innerHTML=`<span class="tag">Final score</span><p class="q">${qz.score} / 10</p><div class="meter"><i style="width:${qz.score*10}%"></i></div><p class="want">${msg}</p><div class="row"><button class="btn primary" id="qa">New quiz</button></div>`;
-    $("#qa").onclick=newQuiz; return;
+    c.innerHTML=`<span class="tag">Final score</span><p class="q">${qz.score} / 10</p><div class="meter"><i style="width:${qz.score*10}%"></i></div><p class="want">${msg}</p>
+      <div class="row"><button class="btn primary" id="qre">Retake these questions</button><button class="btn" id="qa">New quiz</button><button class="btn ghost" id="qrev">Review my answers</button><button class="btn ghost" id="qdrop">Don't count this quiz</button></div>
+      <div id="qreview"></div>`;
+    $("#qa").onclick=newQuiz;
+    $("#qre").onclick=()=>{qz=freshQuiz(qz.items); renderQuiz();};
+    $("#qrev").onclick=()=>{
+      const r=$("#qreview"); if(r.innerHTML){r.innerHTML="";$("#qrev").textContent="Review my answers";return;}
+      $("#qrev").textContent="Hide review";
+      r.innerHTML=`<div class="qreview">${qz.items.map((it,i)=>{const ok=qz.picks[i]===it.a;return `<div class="feedback"><b class="${ok?"ok":"no"}">${ok?"✓":"✗"} ${esc(it.q)}</b><br>${ok?"":`Your answer: ${esc(it.o[qz.picks[i]])}<br>`}Correct: <b>${esc(it.o[it.a])}</b>. ${esc(it.e)}</div>`;}).join("")}</div>`;
+    };
+    $("#qdrop").onclick=()=>{
+      const snap=snapshot(), done=qz;
+      S.session.quizzes=S.session.quizzes.filter(z=>z!==qz.logged); unaward(qz.score*5); save(); renderStats();
+      qz=null; renderQuiz();
+      offerUndo("This quiz won't count toward your session",snap,()=>{qz=done; qz.logged=S.session.quizzes[S.session.quizzes.length-1]||null; renderQuiz();});
+    };
+    return;
   }
-  const it=qz.items[qz.i];
+  const it=qz.items[qz.i], answered=qz.picked!==null, ok=answered&&qz.picked===it.a;
   c.innerHTML=`
     <div class="cardtop"><span class="tag">Question ${qz.i+1} of 10</span><span class="count">Score ${qz.score}</span></div>
     <div class="meter"><i style="width:${qz.i*10}%"></i></div>
     <p class="q">${esc(it.q)}</p>
-    <div class="opts">${it.o.map((o,j)=>`<button class="opt" data-j="${j}"><span class="k">${"ABCD"[j]}</span><span>${esc(o)}</span></button>`).join("")}</div>
-    <div id="qf"></div>`;
-  document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+    <div class="opts">${it.o.map((o,j)=>`<button class="opt ${answered&&j===it.a?"right":answered&&j===qz.picked?"wrong":""}" data-j="${j}" ${answered?"disabled":""}><span class="k">${"ABCD"[j]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div id="qf">${answered?`<div class="feedback"><b class="${ok?"ok":"no"}">${ok?"Correct.":"Not quite."}</b> ${esc(it.e)}</div>
+      <div class="row" style="margin-top:12px"><button class="btn primary" id="qn">${qz.i===9?"See score":"Next question"}</button><button class="btn" id="qchg">Change my answer</button></div>`:""}</div>
+    <div class="row"><button class="btn ghost" id="qrestart">Start over</button>${qz.i>0&&!answered?`<span class="tip">Answers so far: ${qz.score} correct</span>`:""}</div>`;
+  document.querySelectorAll("#qcard .opt").forEach(b=>b.onclick=()=>{
     if(qz.picked!==null) return;
-    const j=+b.dataset.j; qz.picked=j;
-    document.querySelectorAll(".opt").forEach(x=>{const k=+x.dataset.j; if(k===it.a) x.classList.add("right"); else if(k===j) x.classList.add("wrong"); x.disabled=true;});
-    const ok=j===it.a; if(ok){qz.score++;award(5,"Correct");} else qz.missed.push(it.q);
-    $("#qf").innerHTML=`<div class="feedback"><b class="${ok?"ok":"no"}">${ok?"Correct.":"Not quite."}</b> ${esc(it.e)}</div><div class="row" style="margin-top:12px"><button class="btn primary" id="qn">${qz.i===9?"See score":"Next question"}</button></div>`;
-    $("#qn").onclick=()=>{qz.i++;qz.picked=null;renderQuiz();};
-    $("#qn").focus();
+    const j=+b.dataset.j; qz.picked=j; qz.picks[qz.i]=j;
+    if(j===it.a){qz.score++;award(5,"Correct");} else qz.missed.push(it.q);
+    renderQuiz(); $("#qn").focus();
   });
+  if(answered){
+    $("#qn").onclick=()=>{qz.i++;qz.picked=null;renderQuiz();};
+    $("#qchg").onclick=()=>{
+      if(qz.picked===it.a){qz.score--; unaward(5);} else qz.missed=qz.missed.filter(m=>m!==it.q);
+      qz.picked=null; qz.picks[qz.i]=undefined; save(); renderStats(); renderQuiz();
+    };
+  }
+  $("#qrestart").onclick=()=>{
+    if(!confirm("Start this quiz over? Your answers so far will be cleared.")) return;
+    unaward(qz.score*5); save(); renderStats();
+    qz=freshQuiz(qz.items); renderQuiz();
+  };
 }
 
 /* ---------- CODE ---------- */
@@ -321,18 +380,38 @@ function renderCode(){
     <div class="row">
       <button class="btn" id="hb">Show hint</button>
       <button class="btn" id="sb">Show solution</button>
-      <button class="btn primary" id="mb" ${solvedNow?"disabled":""}>${solvedNow?"Solved this session":S.solved[p.id]?"Mark solved again":"Mark solved"}</button>
+      <button class="btn ghost" id="rb">Reset code</button>
+      ${solvedNow?`<span class="badge done">Solved this session</span><button class="btn" id="ub">Unmark solved</button>`:`<button class="btn primary" id="mb">${S.solved[p.id]?"Mark solved again":"Mark solved"}</button>`}
     </div>
     <div id="hint"></div><div id="sol"></div>`;
   $("#cd").value=drafts[p.id]??p.starter;
   bindTimer("ct",p.lvl==="Medium"?900:600);
   $("#ct-b").textContent="Start timer";
-  $("#hb").onclick=()=>{help.hint=true;$("#hint").innerHTML=`<div class="feedback"><b>Hint:</b> ${esc(p.hint)}</div>`;};
-  $("#sb").onclick=()=>{help.sol=true;$("#sol").innerHTML=`<pre>${esc(p.sol)}</pre><p class="tip">Test the edge cases too: an empty list, one item, the biggest and smallest values.</p>`;};
-  $("#mb").onclick=()=>{
-    S.solved[p.id]=1; saveDraft();
-    S.session.code.push({id:p.id,at:Date.now(),help:help.sol?"sol":help.hint?"hint":"none",secs:ELAP.ct||0,text:$("#cd").value});
+  $("#hb").onclick=()=>{
+    const open=!!$("#hint").innerHTML; help.hint=true;
+    $("#hint").innerHTML=open?"":`<div class="feedback"><b>Hint:</b> ${esc(p.hint)}</div>`;
+    $("#hb").textContent=open?"Show hint":"Hide hint";
+  };
+  $("#sb").onclick=()=>{
+    const open=!!$("#sol").innerHTML; help.sol=true;
+    $("#sol").innerHTML=open?"":`<pre>${esc(p.sol)}</pre><p class="tip">Test the edge cases too: an empty list, one item, the biggest and smallest values.</p>`;
+    $("#sb").textContent=open?"Show solution":"Hide solution";
+  };
+  $("#rb").onclick=()=>{
+    const prev=$("#cd").value; if(prev===p.starter) return toast("Already the starter code");
+    $("#cd").value=p.starter; drafts[p.id]=p.starter;
+    toast("Code reset to the starter",()=>{if(cur===p.id&&$("#cd")) $("#cd").value=prev; drafts[p.id]=prev;});
+  };
+  if($("#mb")) $("#mb").onclick=()=>{
+    const first=!S.solved[p.id]; S.solved[p.id]=1; saveDraft();
+    S.session.code.push({id:p.id,at:Date.now(),help:help.sol?"sol":help.hint?"hint":"none",secs:ELAP.ct||0,text:$("#cd").value,first});
     award(15,"Problem solved");renderPlist();renderCode();};
+  if($("#ub")) $("#ub").onclick=()=>{
+    const list=S.session.code, i=list.map(x=>x.id).lastIndexOf(p.id), entry=list[i];
+    saveDraft(); list.splice(i,1); unaward(15);
+    if(entry.first&&!S.history.some(h=>h.code.some(x=>x.id===p.id))) delete S.solved[p.id];
+    save(); renderStats(); renderPlist(); renderCode(); toast("Unmarked. You can mark it solved again anytime");
+  };
 }
 
 /* ---------- MOCK ---------- */
@@ -386,19 +465,28 @@ function renderMock(){
     <div class="row">
       <button class="btn" id="peek">${mk.show?"Hide answer":S.answers[q.id]?"Peek at my answer":"Peek at sample"}</button>
       <button class="btn ghost" id="mn">${mk.i===mk.qs.length-1?"Finish without rating":"Skip rating"}</button>
+      <button class="btn ghost" id="mquit">Start over</button>
     </div></div>`;
   $("#mans").value=mk.notes[mk.i]||"";
   $("#mans").oninput=e=>{mk.notes[mk.i]=e.target.value;};
   bindTimer("mt",90,!mk.show&&!mk.started[mk.i]);
   mk.started[mk.i]=1;
   $("#peek").onclick=()=>{mk.el[mk.i]=Math.max(mk.el[mk.i]||0,ELAP.mt||0);mk.show=!mk.show;renderMock();};
-  const advance=()=>{stopTimer();mk.i++;mk.show=false;if(mk.i>=mk.qs.length) award(25,"Mock screen complete");renderMock();};
-  $("#mn").onclick=advance;
+  // Rating or skipping moves on; Undo in the toast comes back to this question.
+  const here=mk.i, run=mk, last=mk.i===mk.qs.length-1;
+  const goBack=()=>{mk=run; mk.i=here; mk.show=false; renderCats(); renderMock();};
+  const advance=(xp,msg,snap)=>{
+    stopTimer(); mk.i++; mk.show=false;
+    if(last){xp+=25; msg=msg?msg+" · Screen complete":"Mock screen complete";}
+    if(xp) award(xp,msg,{snap,then:goBack}); else offerUndo("Question skipped",snap,goBack);
+    renderMock();
+  };
+  $("#mn").onclick=()=>advance(0,"",snapshot());
+  $("#mquit").onclick=()=>{if(!confirm("Start over with a new screen? Answers you've already rated stay saved.")) return; stopTimer(); mk=null; renderMock();};
   document.querySelectorAll("#mrate button").forEach(b=>b.onclick=()=>{
-    const r=b.dataset.r; S.ratings[q.id]=r;
+    const r=b.dataset.r, snap=snapshot(); S.ratings[q.id]=r;
     logAttempt(q,r,$("#mans").value,Math.max(mk.el[mk.i]||0,ELAP.mt||0),"mock");
-    award({g:10,m:5,l:2}[r],{g:"Bravo!",m:"Nice rep",l:"Every rehearsal counts"}[r]);
-    renderCats(); advance();
+    renderCats(); advance({g:10,m:5,l:2}[r],{g:"Bravo!",m:"Nice rep",l:"Every rehearsal counts"}[r],snap);
   });
 }
 
@@ -431,11 +519,11 @@ function scores(s){
 const unitN=(k,n)=>k==="quiz"?n+" quiz"+(n>1?"zes":""):k==="code"?n+" solved":n+" question"+(n>1?"s":"");
 function endSession(){
   if(isEmpty(S.session)){toast("Nothing saved in this session yet");return;}
-  const done=S.session; done.ended=Date.now();
+  const snap=snapshot(), done=S.session; done.ended=Date.now();
   S.history.push(done); S.session=newSession(); save();
   cmpA=done.id; cmpB=null;
   renderStats(); saveDraft(); renderCode(); renderProgress();
-  toast(sessLabel(done)+" saved · Session "+S.session.n+" started");
+  offerUndo(sessLabel(done)+" saved · Session "+S.session.n+" started",snap,()=>{cmpA=cmpB=null; renderCode(); renderProgress();});
 }
 function heatCell(k,s,i,list){
   const sc=scores(s)[k];
@@ -515,7 +603,9 @@ function renderProgress(){
   if($("#ca")){$("#ca").onchange=e=>{cmpA=e.target.value;renderProgress();};$("#cb").onchange=e=>{cmpB=e.target.value;renderProgress();};}
   document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{
     const x=S.history.find(h=>h.id===b.dataset.del);
-    if(x&&confirm("Delete "+sessLabel(x)+"? This can't be undone.")){S.history=S.history.filter(h=>h!==x);save();renderProgress();}
+    if(!x||!confirm("Delete "+sessLabel(x)+"?")) return;
+    const snap=snapshot(); S.history=S.history.filter(h=>h!==x); save(); renderProgress();
+    offerUndo(sessLabel(x)+" deleted",snap,renderProgress);
   });
   $("#exp").onclick=()=>{
     const blob=new Blob([JSON.stringify(S,null,2)],{type:"application/json"}), a=document.createElement("a");
@@ -529,8 +619,10 @@ function renderProgress(){
       const d=JSON.parse(t);
       if(!d||!Array.isArray(d.history)) throw 0;
       if(!confirm("Replace your current progress with this backup?")) return;
+      const before=snapshot();
       applyState(d); save();
-      toast("Backup restored");
+      const mark=S.updatedAt;
+      toast("Backup restored",()=>{if(S.updatedAt!==mark) return toast("Too late to undo. Something else changed since."); applyState(JSON.parse(before)); save(); toast("Undone");});
     }).catch(()=>toast("That file isn't a Callback Coach backup"));
   };
 }
@@ -572,6 +664,9 @@ function renderProfile(){
       <p class="tip" style="margin:0">Highlighted parts are details only you can add. Say them out loud, or save your own version of the answer in Question cards.</p></div>
     <div class="card"><h3>Your answers <span class="count">${mine.length} of ${QS.length}</span></h3>
       ${mine.length?mine.map(q=>`<div class="qpair"><b>${esc(qText(q))}</b><div class="ans">${esc(S.answers[q.id])}</div><div class="row"><button class="btn ghost" data-delans="${q.id}">Delete</button></div></div>`).join(""):`<p class="tip" style="margin:0">None yet. In Question cards, reveal an answer and choose <b>Write my own version</b>. Your answers replace the samples everywhere, including the mock pre-screen.</p>`}</div>
+    <div class="card"><h3>Start fresh</h3>
+      <p class="tip" style="margin:0">Remove your details or your saved answers. Your practice history, scores and XP aren't affected, and you can undo right after.</p>
+      <div class="row"><button class="btn" id="pclear">Clear my profile details</button><button class="btn" id="pclearans">Delete all my answers</button></div></div>
     <div class="card"><h3>Profile file</h3>
       <p class="tip" style="margin:0">Save your profile and answers as a file, or load one. Loading adds to what's here and replaces matching fields and answers. Your practice history isn't affected.</p>
       <div class="row"><button class="btn" id="pexp">Export profile</button><button class="btn" id="pimpB">Import profile</button><input type="file" id="pimp" accept="application/json,.json" hidden></div></div>`;
@@ -583,9 +678,21 @@ function renderProfile(){
     prev(); renderTokens(); clearTimeout(t); t=setTimeout(save,400);
   }));
   el.querySelectorAll("[data-delans]").forEach(b=>b.onclick=()=>{
-    if(!confirm("Delete your version of this answer?")) return;
-    delete S.answers[b.dataset.delans]; save(); renderProfile();
+    const snap=snapshot(); delete S.answers[b.dataset.delans]; save(); renderProfile();
+    offerUndo("Answer deleted",snap,renderProfile);
   });
+  $("#pclear").onclick=()=>{
+    if(!Object.keys(S.profile).length) return toast("Your profile is already empty");
+    if(!confirm("Clear all your profile details? Your saved answers and practice history stay.")) return;
+    const snap=snapshot(); S.profile={}; save(); renderTokens(); renderProfile(); if(!mk) renderMock();
+    offerUndo("Profile details cleared",snap,()=>{renderProfile(); if(!mk) renderMock();});
+  };
+  $("#pclearans").onclick=()=>{
+    const n=Object.keys(S.answers).length; if(!n) return toast("You haven't saved any answers yet");
+    if(!confirm(`Delete all ${n} of your saved answers? The samples will show again.`)) return;
+    const snap=snapshot(); S.answers={}; save(); renderProfile(); if(revealed) renderReveal();
+    offerUndo(`${n} answer${n===1?"":"s"} deleted`,snap,()=>{renderProfile(); if(revealed) renderReveal();});
+  };
   $("#pexp").onclick=()=>{
     const data={type:"callback-coach-profile",version:1,profile:S.profile,answers:S.answers};
     const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}), a=document.createElement("a");
@@ -601,10 +708,11 @@ function renderProfile(){
       if(typeof prof!=="object"||typeof ans!=="object") throw 0;
       const n=Object.keys(ans).filter(k=>QS.some(q=>q.id===k)).length;
       if(!confirm(`Load this profile and ${n} answer${n===1?"":"s"}?`)) return;
+      const snap=snapshot();
       for(const [k,v] of Object.entries(prof)) if((k in TOK||k==="role")&&typeof v==="string"&&v.trim()) S.profile[k]=v.trim().slice(0,160);
       for(const [k,v] of Object.entries(ans)) if(QS.some(q=>q.id===k)&&typeof v==="string"&&v.trim()) S.answers[k]=v.trim();
       save(); renderTokens(); renderProfile(); if(revealed) renderReveal();
-      toast("Profile loaded");
+      offerUndo("Profile loaded",snap,()=>{renderProfile(); if(revealed) renderReveal();});
     }).catch(()=>toast("That file isn't a Callback Coach profile"));
   };
 }

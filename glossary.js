@@ -263,7 +263,9 @@ function renderGBody(){
   const nextCard=()=>{gi++; gshow=false; renderGBody();};
   if($("#gflip")){$("#gflip").onclick=()=>{gshow=true; renderGBody();}; $("#gskip").onclick=nextCard;}
   if($("#gyes")){
-    $("#gyes").onclick=()=>{gstate().known[x.t]=1; save(); gi++; gshow=false; renderGlossary();};
-    $("#gno").onclick=()=>{delete gstate().known[x.t]; save(); nextCard();};
+    // Undo puts the card back, answer showing, so it can be answered again.
+    const at=gi, back=()=>{gi=at; gshow=true; if(!$("#p-glossary").hidden) renderGlossary();};
+    $("#gyes").onclick=()=>{const snap=snapshot(); gstate().known[x.t]=1; save(); gi++; gshow=false; renderGlossary(); offerUndo("Marked as known",snap,back);};
+    $("#gno").onclick=()=>{const snap=snapshot(); delete gstate().known[x.t]; save(); nextCard(); offerUndo("Kept in the deck",snap,back);};
   }
 }

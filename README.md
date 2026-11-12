@@ -18,6 +18,7 @@ It's built for career changers moving into tech roles such as customer success, 
 - **Free accounts:** sign up with email and password or Google, log in and out, and your progress syncs to the cloud so you can switch between devices. Without an account, the app works in guest mode.
 - **Works on any device:** the layout adapts to phones, tablets and desktops, with light and dark themes. On a phone you can add it to your home screen and it opens full screen like an app.
 - **XP, levels and a daily streak** to keep you practicing.
+- **Undo and re-do:** most actions show an **Undo** button for a few seconds afterward. Quizzes have **Change my answer**, **Start over**, **Retake these questions** and **Don't count this quiz**. Code warm-ups have **Unmark solved** and **Reset code**. My profile has **Clear my profile details** and **Delete all my answers**.
 
 ## Getting started
 
