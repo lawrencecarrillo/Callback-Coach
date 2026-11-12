@@ -43,6 +43,7 @@
     <nav role="tablist" aria-label="Practice stations">
       <button role="tab" id="t-guide" aria-selected="false" data-tab="guide">How it works</button>
       <button role="tab" id="t-playbook" aria-selected="true" data-tab="playbook">Playbook</button>
+      <button role="tab" id="t-glossary" aria-selected="false" data-tab="glossary">Glossary</button>
       <button role="tab" id="t-practice" aria-selected="false" data-tab="practice">Question cards</button>
       <button role="tab" id="t-quiz" aria-selected="false" data-tab="quiz">Quick quiz</button>
       <button role="tab" id="t-code" aria-selected="false" data-tab="code">Code warm-ups</button>
@@ -77,6 +78,9 @@
       <div class="card"><span class="tag" style="align-self:flex-start">Learn</span><h3>Playbook</h3>
         <p class="tip" style="margin:0">The six stages of a typical tech hiring process, what each one checks and how to prepare. It also has checklists for before and during the interview, common mistakes, a thank-you email you can copy, offer negotiation tips and trusted outside resources.</p>
         <div class="row"><button class="btn" data-go="playbook">Open Playbook</button></div></div>
+      <div class="card"><span class="tag" style="align-self:flex-start">Learn</span><h3>Glossary</h3>
+        <p class="tip" style="margin:0">Over 150 tech terms, from API and churn to RAG and RSUs, each with a plain-English meaning and an example of how it's used at work. Search or filter by topic, star terms to build your own list, and switch to flashcards to quiz yourself. Terms you mark as known are tracked.</p>
+        <div class="row"><button class="btn" data-go="glossary">Open Glossary</button></div></div>
       <div class="card"><span class="tag" style="align-self:flex-start">Practice</span><h3>Question cards</h3>
         <ul class="checklist">
           <li>Pick a category with the chips at the top. The number shows how many cards you've nailed</li>
@@ -235,6 +239,13 @@ Best,
       </div></div>
   </section>
 
+  <!-- GLOSSARY -->
+  <section role="tabpanel" id="p-glossary" aria-labelledby="t-glossary" hidden>
+    <div><h2>Tech glossary</h2>
+    <p class="lede">The words you'll hear in job posts, interviews and your first weeks on the job, in plain English with an example of how people actually use them. Star the ones you want to review, and use flashcards to test yourself.</p></div>
+    <div id="gloss"></div>
+  </section>
+
   <!-- PRACTICE -->
   <section role="tabpanel" id="p-practice" aria-labelledby="t-practice" hidden>
     <div><h2>Rehearse one question at a time</h2>
@@ -304,6 +315,7 @@ Best,
 
 <script src="firebase-config.js"></script>
 <script src="script.js"></script>
+<script src="glossary.js"></script>
 <script src="auth.js"></script>
 </body>
 </html>

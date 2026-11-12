@@ -8,6 +8,7 @@ It's built for career changers moving into tech roles such as customer success, 
 
 - **How it works:** an in-app guide to every feature, with a suggested 20-minute practice routine, how scoring works and answers to common questions. It opens automatically on your first visit.
 - **Playbook:** the six stages of a typical tech hiring process, what each stage checks, and how to prepare. It also has interview checklists, common mistakes, a thank-you email template, offer negotiation tips and links to trusted resources.
+- **Glossary:** 150+ tech terms in nine topics (Web & APIs, Code, Data, Cloud & security, AI, Product & Agile, Business & customers, Workplace talk, Hiring & pay). Each has a plain-English definition and an example of how it's used at work. You can search, filter, star terms into "My list", and quiz yourself with flashcards that track which terms you know.
 - **Question cards:** 40+ interview questions in seven categories (Opening, Behavioral, Logistics, Software engineer, AI / prompt, Customer success, Solutions engineer). Each card has a 90-second timer, what the interviewer is listening for, a sample answer and a STAR checklist for behavioral questions. Cards you rate lower come back sooner.
 - **Quick quiz:** 10 random multiple-choice questions on APIs, HTTP status codes, SQL, Git and AI terms.
 - **Code warm-ups:** HackerRank-style JavaScript and SQL problems with a timer, a hint and a solution.
@@ -84,6 +85,7 @@ If someone uses the app on two devices at once, the most recently saved version 
 index.html             Page markup, tab layout and the sign-in dialog
 styles.css             Styles: light and dark themes, phone/tablet/desktop layouts
 script.js              Question data, practice logic, sessions and progress tracking
+glossary.js            Glossary terms and the Glossary tab
 auth.js                Accounts: sign up, log in and out, cloud sync (Firebase)
 firebase-config.js     Your Firebase project settings (empty = guest mode)
 firestore.rules        Database security rules to paste into Firebase
@@ -103,6 +105,7 @@ All the content is at the top of `script.js`:
 - `QUIZ`: quiz questions. `a` is the index of the correct option.
 - `CODE`: coding problems with starter code, a hint and a solution.
 - `CATS`: question categories.
+- `GLOSSARY` and `GCATS` in `glossary.js`: glossary terms and topics. Each term has `t` (term), `c` (topic), `d` (definition), `e` (example) and optional `aka` (other names, also searchable).
 
 The playbook and thank-you email in `index.html` use `<span data-tok="key"></span>` for the same profile slots.
 

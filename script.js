@@ -88,12 +88,12 @@ const ACCOUNTS=!!(window.FIREBASE_CONFIG&&window.FIREBASE_CONFIG.apiKey);
 // When accounts are on, reopen the last signed-in user's local copy so there's no flash of guest data.
 let KEY=BASE_KEY;
 try{if(ACCOUNTS) KEY=localStorage.getItem(ACTIVE_KEY)||BASE_KEY;}catch(e){}
-const DEFAULTS=()=>({xp:0,ratings:{},solved:{},days:[],quizBest:0,seq:0,session:null,history:[],updatedAt:0,profile:{},answers:{}});
+const DEFAULTS=()=>({xp:0,ratings:{},solved:{},days:[],quizBest:0,seq:0,session:null,history:[],updatedAt:0,profile:{},answers:{},gloss:{star:{},known:{}}});
 let S=DEFAULTS();
 let firstVisit=true;
 try{const raw=localStorage.getItem(KEY); if(raw){firstVisit=false;S=Object.assign(S,JSON.parse(raw));}}catch(e){}
 function newSession(){S.seq=(S.seq||0)+1;return {id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),n:S.seq,name:"",started:Date.now(),attempts:[],quizzes:[],code:[]};}
-function ensureSession(){if(!Array.isArray(S.history)) S.history=[]; if(!S.session) S.session=newSession(); if(!S.profile) S.profile={}; if(!S.answers) S.answers={};}
+function ensureSession(){if(!Array.isArray(S.history)) S.history=[]; if(!S.session) S.session=newSession(); if(!S.profile) S.profile={}; if(!S.answers) S.answers={}; if(!S.gloss) S.gloss={star:{},known:{}};}
 ensureSession();
 function writeLocal(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 function save(){S.updatedAt=Date.now();writeLocal();if(window.CC&&CC.onSave) CC.onSave();}
@@ -157,6 +157,7 @@ document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()
   stopTimer();
   if(b.dataset.tab==="progress") renderProgress();
   if(b.dataset.tab==="profile") renderProfile();
+  if(b.dataset.tab==="glossary") renderGlossary();
   if(b.dataset.tab==="mock"&&!mk) renderMock();
   b.scrollIntoView({block:"nearest",inline:"nearest"});
 }));
@@ -617,6 +618,7 @@ function applyState(obj){
   buildDeck(); renderCats(); renderCard(); renderQuiz(); renderPlist(); renderCode(); renderMock(); renderStats(); renderTokens();
   if(!$("#p-progress").hidden) renderProgress();
   if(!$("#p-profile").hidden) renderProfile();
+  if(!$("#p-glossary").hidden) renderGlossary();
 }
 window.CC={
   BASE_KEY,
