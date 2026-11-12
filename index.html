@@ -1,150 +1,14 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Callback Coach</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
-<style>
-/* Layout: a rehearsal room. Sticky "call board" header, tabbed stations, one focused card at a time. */
-:root{
-  --bg:#F2F4F7; --surface:#FFFFFF; --ink:#18202E; --muted:#5A6577; --line:#DCE1E9;
-  --spot:#E3A21A; --spot-ink:#3A2700; --spot-soft:#FCF0D2;
-  --teal:#17706E; --teal-soft:#DCEFEE;
-  --good:#1E8A4C; --mid:#B7791F; --low:#B4413A;
-  --code-bg:#1C2433; --code-fg:#E6EBF2;
-  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
-  --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
-  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
-}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#11151D; --surface:#1A202B; --ink:#E9EDF3; --muted:#9AA5B6; --line:#2C3443;
-  --spot:#F0B53A; --spot-ink:#2A1C00; --spot-soft:#3A2E14;
-  --teal:#4FB8B4; --teal-soft:#16302F;
-  --good:#4CC17E; --mid:#E0A548; --low:#E4766E;
-  --code-bg:#0B0F16; --code-fg:#E6EBF2; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#11151D; --surface:#1A202B; --ink:#E9EDF3; --muted:#9AA5B6; --line:#2C3443;
-  --spot:#F0B53A; --spot-ink:#2A1C00; --spot-soft:#3A2E14;
-  --teal:#4FB8B4; --teal-soft:#16302F;
-  --good:#4CC17E; --mid:#E0A548; --low:#E4766E;
-  --code-bg:#0B0F16; --code-fg:#E6EBF2; color-scheme:dark}
-*{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
-.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
-.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:12px}
-.brand{display:flex;align-items:center;gap:10px}
-.lamp{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 50% 40%,var(--spot) 0 45%,transparent 46%),var(--spot-soft);flex:none}
-.brand h1{font-family:var(--display);font-weight:800;font-size:1.35rem;margin:0;letter-spacing:-.01em}
-.brand small{display:block;color:var(--muted);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
-.stats{display:flex;gap:8px;flex-wrap:wrap}
-.stat{display:flex;flex-direction:column;align-items:center;min-width:64px;padding:4px 10px;border:1px solid var(--line);border-radius:10px}
-.stat b{font-family:var(--display);font-size:1.1rem;font-variant-numeric:tabular-nums}
-.stat span{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-nav{display:flex;gap:4px;overflow-x:auto;padding-bottom:0}
-nav button{font:inherit;font-weight:700;background:none;border:0;color:var(--muted);padding:10px 14px;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap}
-nav button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--spot)}
-main{padding-block:24px 64px}
-section[role=tabpanel]{display:flex;flex-direction:column;gap:18px}
-h2{font-family:var(--display);font-weight:700;font-size:1.6rem;margin:0;text-wrap:balance;letter-spacing:-.01em}
-.lede{color:var(--muted);margin:0;max-width:62ch}
-.chips{display:flex;gap:8px;flex-wrap:wrap}
-.chip{font:inherit;font-size:.9rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 12px;border-radius:999px;cursor:pointer}
-.chip[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
-.chip .n{opacity:.6;font-variant-numeric:tabular-nums;margin-left:4px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:14px;min-width:0}
-.cardtop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.tag{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--teal);background:var(--teal-soft);padding:4px 10px;border-radius:6px}
-.count{color:var(--muted);font-size:.85rem;font-variant-numeric:tabular-nums}
-.q{font-family:var(--display);font-weight:700;font-size:1.45rem;line-height:1.25;margin:0;text-wrap:balance}
-.want{color:var(--muted);margin:0}
-.want b{color:var(--ink)}
-textarea{width:100%;min-height:110px;font:inherit;font-size:.95rem;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);resize:vertical}
-textarea.code{font-family:var(--mono);font-size:.85rem;min-height:140px}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.btn{font:inherit;font-weight:700;padding:10px 16px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
-.btn:hover{border-color:var(--ink)}
-.btn.primary{background:var(--spot);border-color:var(--spot);color:var(--spot-ink)}
-.btn.primary:hover{filter:brightness(1.05)}
-.btn.ghost{border-color:transparent;background:none;color:var(--muted)}
-.btn:disabled{opacity:.45;cursor:default}
-button:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
-.timer{display:flex;align-items:center;gap:10px;margin-left:auto}
-.clock{font-family:var(--mono);font-weight:600;font-size:1.05rem;font-variant-numeric:tabular-nums;min-width:4.2ch;text-align:right}
-.ring{width:30px;height:30px;transform:rotate(-90deg)}
-.ring circle{fill:none;stroke-width:4}
-.ring .trk{stroke:var(--line)} .ring .val{stroke:var(--spot);transition:stroke-dashoffset .9s linear}
-.clock.over{color:var(--low)}
-.sample{border-left:4px solid var(--spot);background:var(--spot-soft);padding:14px 16px;border-radius:0 10px 10px 0;white-space:pre-line}
-.sample h4{margin:0 0 6px;font-size:.75rem;text-transform:uppercase;letter-spacing:.09em}
-.tip{font-size:.92rem;color:var(--muted)}
-.star{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.star label{display:flex;flex-direction:column;gap:2px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;cursor:pointer;font-size:.82rem;color:var(--muted)}
-.star label b{font-family:var(--display);font-size:1.15rem;color:var(--ink)}
-.star input{position:absolute;opacity:0;pointer-events:none}
-.star label:has(input:checked){border-color:var(--teal);background:var(--teal-soft)}
-.rate{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.rate button{font:inherit;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px}
-.rate button small{font-weight:400;color:var(--muted);font-size:.78rem}
-.rate .g:hover{border-color:var(--good)} .rate .m:hover{border-color:var(--mid)} .rate .l:hover{border-color:var(--low)}
-.dots{display:flex;gap:4px;flex-wrap:wrap}
-.dot{width:12px;height:12px;border-radius:3px;background:var(--line)}
-.dot.g{background:var(--good)} .dot.m{background:var(--mid)} .dot.l{background:var(--low)} .dot.cur{outline:2px solid var(--ink);outline-offset:1px}
-.opts{display:flex;flex-direction:column;gap:8px}
-.opt{font:inherit;text-align:left;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);cursor:pointer;display:flex;gap:10px;align-items:baseline}
-.opt .k{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
-.opt.right{border-color:var(--good);background:color-mix(in srgb,var(--good) 12%,var(--surface))}
-.opt.wrong{border-color:var(--low);background:color-mix(in srgb,var(--low) 12%,var(--surface))}
-.feedback{padding:12px 14px;border-radius:10px;background:var(--bg)}
-.feedback b.ok{color:var(--good)} .feedback b.no{color:var(--low)}
-.meter{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
-.meter i{display:block;height:100%;background:var(--spot);border-radius:99px;transition:width .3s}
-pre{margin:0;background:var(--code-bg);color:var(--code-fg);padding:14px 16px;border-radius:10px;overflow-x:auto;font-family:var(--mono);font-size:.84rem;line-height:1.55}
-code{font-family:var(--mono);font-size:.88em;background:var(--bg);padding:1px 5px;border-radius:4px}
-.plist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.pitem{font:inherit;text-align:left;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:12px 14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px}
-.pitem[aria-current="true"]{border-color:var(--spot);box-shadow:0 0 0 2px var(--spot-soft)}
-.pitem small{display:block;color:var(--muted);font-size:.78rem}
-.badge{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;background:var(--bg);color:var(--muted);flex:none}
-.badge.done{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
-select{font:inherit;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
-.stage{background:var(--ink);color:var(--surface);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden}
-.stage::after{content:"";position:absolute;inset:-40% 40% auto -10%;height:180%;background:radial-gradient(ellipse at top,color-mix(in srgb,var(--spot) 35%,transparent),transparent 60%);pointer-events:none}
-.stage > *{position:relative;z-index:1}
-.stage .lede{color:color-mix(in srgb,var(--surface) 75%,transparent)}
-.stage h2{color:var(--surface)}
-.checklist{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:999px;font-weight:700;opacity:0;transition:.25s;pointer-events:none;z-index:20}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.sum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.sum div{border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
-.sum b{display:block;font-family:var(--display);font-size:1.6rem;font-variant-numeric:tabular-nums}
-.sum span{font-size:.78rem;color:var(--muted)}
-h3{font-family:var(--display);font-weight:700;font-size:1.12rem;margin:0}
-.card h3{margin-bottom:2px}
-.stages{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden}
-.stg{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;padding:18px 20px;border-top:1px solid var(--line)}
-.stg:first-child{border-top:0}
-.stg p{margin:6px 0 0;font-size:.95rem;max-width:68ch}
-.sn{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;background:var(--spot-soft);color:var(--ink);border:2px solid var(--spot)}
-.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-.grid2.tight{gap:4px 18px}
-.grid2.tight p{margin:6px 0;font-size:.93rem}
-.email{white-space:pre-wrap;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:.92rem;border:1px solid var(--line)}
-.res{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.res a{display:flex;flex-direction:column;gap:2px;padding:12px;border:1px solid var(--line);border-radius:10px;color:var(--teal);font-weight:700;text-decoration:none}
-.res a:hover{border-color:var(--teal)}
-.res small{color:var(--muted);font-weight:400}
-@media (max-width:720px){.grid2,.res{grid-template-columns:1fr}}
-@media (max-width:560px){
-  .star{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .plist{grid-template-columns:1fr}
-  .q{font-size:1.25rem}
-  .timer{margin-left:0}
-  .stat{min-width:56px}
-}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
-</style>
-
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
 <header>
   <div class="wrap">
     <div class="bar">
@@ -153,19 +17,102 @@ h3{font-family:var(--display);font-weight:700;font-size:1.12rem;margin:0}
         <div class="stat"><b id="xp">0</b><span>XP</span></div>
         <div class="stat"><b id="lvl">Extra</b><span>Level</span></div>
         <div class="stat"><b id="streak">0</b><span>Day streak</span></div>
+        <button class="stat link" id="sessStat" title="Open Progress"><b id="sess">1</b><span>Session</span></button>
       </div>
     </div>
     <nav role="tablist" aria-label="Practice stations">
+      <button role="tab" id="t-guide" aria-selected="false" data-tab="guide">How it works</button>
       <button role="tab" id="t-playbook" aria-selected="true" data-tab="playbook">Playbook</button>
       <button role="tab" id="t-practice" aria-selected="false" data-tab="practice">Question cards</button>
       <button role="tab" id="t-quiz" aria-selected="false" data-tab="quiz">Quick quiz</button>
       <button role="tab" id="t-code" aria-selected="false" data-tab="code">Code warm-ups</button>
       <button role="tab" id="t-mock" aria-selected="false" data-tab="mock">Mock pre-screen</button>
+      <button role="tab" id="t-progress" aria-selected="false" data-tab="progress">Progress</button>
     </nav>
   </div>
 </header>
 
 <main class="wrap">
+  <!-- GUIDE -->
+  <section role="tabpanel" id="p-guide" aria-labelledby="t-guide" hidden>
+    <div class="stage">
+      <span class="tag" style="align-self:flex-start">Welcome</span>
+      <h2>How Callback Coach works</h2>
+      <p class="lede">Callback Coach is a rehearsal room for tech job interviews. You practice answering out loud against a clock, compare your answer with a strong sample, rate yourself honestly, and watch your scores climb from one session to the next. A few focused sessions a week will make the real call feel familiar.</p>
+      <div class="row"><button class="btn primary" data-go="practice">Start with a question card</button><button class="btn" data-go="playbook">Read the hiring playbook</button></div>
+    </div>
+
+    <div><h3>A good 20-minute session</h3>
+    <p class="tip" style="margin:4px 0 0">You don't have to use every tab every time. This routine covers the basics.</p></div>
+    <div class="stages">
+      <div class="stg"><span class="sn">1</span><div><h3>Warm up · 3 min</h3><p>Answer "Tell me about yourself" in <i>Question cards → Opening</i>. It's the first question in almost every interview.</p></div></div>
+      <div class="stg"><span class="sn">2</span><div><h3>Rehearse · 10 min</h3><p>Do 4–5 cards in the category that matches your next interview. Behavioral cards are the most common in hiring-manager rounds.</p></div></div>
+      <div class="stg"><span class="sn">3</span><div><h3>Check the basics · 4 min</h3><p>Take a <i>Quick quiz</i>, or try one <i>Code warm-up</i> if you're applying for engineering roles.</p></div></div>
+      <div class="stg"><span class="sn">4</span><div><h3>Save your session · 1 min</h3><p>Open <i>Progress</i> and click <b>End &amp; save session</b>. Next time you'll see how each department moved.</p></div></div>
+    </div>
+
+    <div><h3>What each tab does</h3></div>
+    <div class="grid2">
+      <div class="card"><span class="tag" style="align-self:flex-start">Learn</span><h3>Playbook</h3>
+        <p class="tip" style="margin:0">The six stages of a typical tech hiring process, what each one checks and how to prepare. It also has checklists for before and during the interview, common mistakes, a thank-you email you can copy, offer negotiation tips and trusted outside resources.</p>
+        <div class="row"><button class="btn" data-go="playbook">Open Playbook</button></div></div>
+      <div class="card"><span class="tag" style="align-self:flex-start">Practice</span><h3>Question cards</h3>
+        <ul class="checklist">
+          <li>Pick a category with the chips at the top. The number shows how many cards you've nailed</li>
+          <li>Press <b>Start 90s</b> and answer out loud. Jot key points in the box if it helps</li>
+          <li>For behavioral cards, tick off Situation, Task, Action and Result as you cover them</li>
+          <li>Press <b>Show sample answer</b>, compare, then rate yourself</li>
+        </ul>
+        <p class="tip" style="margin:0">Cards you rate "Practice more" come back sooner. The colored squares under the card show your ratings for the deck.</p>
+        <div class="row"><button class="btn" data-go="practice">Open Question cards</button></div></div>
+      <div class="card"><span class="tag" style="align-self:flex-start">Practice</span><h3>Quick quiz</h3>
+        <p class="tip" style="margin:0">Ten random multiple-choice questions on terms recruiters and online tests check: APIs, HTTP status codes, SQL, Git and AI. Each answer shows a short explanation, so a miss still teaches you something. Your best score is kept.</p>
+        <div class="row"><button class="btn" data-go="quiz">Open Quick quiz</button></div></div>
+      <div class="card"><span class="tag" style="align-self:flex-start">Practice</span><h3>Code warm-ups</h3>
+        <p class="tip" style="margin:0">Short JavaScript and SQL problems like the ones on HackerRank tests. Start the timer, write your solution in the box while talking through it, and use <b>Show hint</b> or <b>Show solution</b> if you're stuck. Press <b>Mark solved</b> when you're done. Your code and time are saved to your session.</p>
+        <div class="row"><button class="btn" data-go="code">Open Code warm-ups</button></div></div>
+      <div class="card"><span class="tag" style="align-self:flex-start">Simulate</span><h3>Mock pre-screen</h3>
+        <p class="tip" style="margin:0">A seven-question recruiter call for the role you choose, in the order a real call usually follows. The 90-second clock starts on its own for each question. Answer out loud, peek at the sample if you need to, then rate yourself to save the answer and move on. Recording yourself on your phone helps a lot.</p>
+        <div class="row"><button class="btn" data-go="mock">Open Mock pre-screen</button></div></div>
+      <div class="card"><span class="tag" style="align-self:flex-start">Track</span><h3>Progress</h3>
+        <p class="tip" style="margin:0">Shows the current session, a grid of your scores by department across sessions, a side-by-side comparison of any two sessions (including your answers to the same question), every saved session, and backup buttons.</p>
+        <div class="row"><button class="btn" data-go="progress">Open Progress</button></div></div>
+    </div>
+
+    <div class="card"><h3>Sessions and scores</h3>
+      <p class="tip" style="margin:0">A session is one sitting of practice. Everything you rate, finish or solve is added to the current session until you end it. Give it a name if it's prep for a specific interview.</p>
+      <div class="grid2 tight">
+        <p><b>Interview questions</b> score 100 for Nailed it, 60 for Getting there and 20 for Practice more. Each department uses your latest rating per question.</p>
+        <p><b>Quick quiz</b> scores the percent you got right, averaged across the quizzes in the session.</p>
+        <p><b>Code warm-ups</b> score 100 if you solved it alone, 70 if you used the hint and 40 if you viewed the solution.</p>
+        <p><b>Arrows</b> in the growth grid compare each score with the last session that practiced that department. ▲ means you improved.</p>
+      </div>
+      <p class="tip" style="margin:0"><b>Rate honestly.</b> The scores only help if they're real. A "Practice more" today makes the jump to "Nailed it" next week easy to see.</p></div>
+
+    <div class="grid2">
+      <div class="card"><h3>XP, levels and streaks</h3>
+        <p class="tip" style="margin:0">You earn XP for every rep: 10 / 5 / 2 for a rated answer, 5 per correct quiz answer, 15 per solved problem and 25 for finishing a mock screen. XP moves you up through six levels:</p>
+        <p style="margin:0"><b>Extra</b> → <b>Understudy</b> (60) → <b>Ensemble</b> (180) → <b>Featured</b> (360) → <b>Lead</b> (600) → <b>Headliner</b> (900)</p>
+        <p class="tip" style="margin:0">Your day streak counts the days in a row you've practiced. Short daily practice beats one long cram.</p></div>
+      <div class="card"><h3>Your data</h3>
+        <ul class="checklist">
+          <li>Everything is saved in this browser on this device. Nothing is sent anywhere</li>
+          <li>Clearing browser data, using private mode or switching browsers starts you fresh</li>
+          <li>Use <b>Progress → Export backup</b> now and then to keep a copy</li>
+          <li><b>Import backup</b> restores that file, on this device or a new one</li>
+        </ul></div>
+    </div>
+
+    <div class="card"><h3>Common questions</h3>
+      <div class="grid2 tight">
+        <p><b>Do I have to type my answers?</b> No. Saying them out loud is the real practice. Notes are optional, but they let you compare your wording between sessions.</p>
+        <p><b>The sample answers mention someone else's background.</b> They're examples. Rewrite them with your own stories, numbers and projects.</p>
+        <p><b>I ran over 90 seconds.</b> The clock keeps counting in red so you can see by how much. Aim to finish under the limit.</p>
+        <p><b>Can I redo a question in the same session?</b> Yes. Your latest rating for that question is the one that counts toward the score.</p>
+        <p><b>When should I end a session?</b> When you stop for the day, or before a session aimed at a specific interview.</p>
+        <p><b>Can I delete a session?</b> Yes. Open it under <i>Progress → Saved sessions</i> and click <b>Delete this session</b>.</p>
+      </div></div>
+  </section>
   <!-- PLAYBOOK -->
   <section role="tabpanel" id="p-playbook" aria-labelledby="t-playbook">
     <div><h2>How tech hiring actually works</h2>
@@ -288,321 +235,16 @@ linkedin.com/in/lawrencecarrillo</pre>
   <section role="tabpanel" id="p-mock" aria-labelledby="t-mock" hidden>
     <div id="mock"></div>
   </section>
+
+  <!-- PROGRESS -->
+  <section role="tabpanel" id="p-progress" aria-labelledby="t-progress" hidden>
+    <div><h2>Track your growth</h2>
+    <p class="lede">Everything you rate, finish or solve is saved to the current session, including the notes you typed and how long you took. End the session when you're done for the day, start a fresh one next time, and compare how each department moves.</p></div>
+    <div id="prog"></div>
+  </section>
 </main>
 <div class="toast" id="toast" role="status"></div>
 
-<script>
-/* ---------- DATA ---------- */
-const CATS = {
-  opening:"Opening", behavioral:"Behavioral", logistics:"Logistics",
-  swe:"Software engineer", ai:"AI / prompt", cs:"Customer success", se:"Solutions engineer"
-};
-const QS = [
- {id:"o1",c:"opening",q:"Tell me about yourself.",want:"A short story of past, present and future that ends with why you fit this job.",a:"I've spent most of my career in hospitality and operations in New York. Most recently I managed service across four venues at The Hospitality Department in the Martinique Hotel, and before that I was a front of house manager at Eataly Flatiron and worked in customer experience at Goldbelly.\n\nIn March 2026 I joined Pursuit's AI Native Fellowship. I've been building real products there, including Ask BPL, an AI assistant that helps Brooklyn Public Library staff find answers in their policies.\n\nI'm looking for a role where I can combine understanding people with building and teaching AI tools. That's why this role caught my eye.",tip:"Have a 30-second version ready too. Some recruiters cut in early."},
- {id:"o2",c:"opening",q:"Why do you want to work in tech?",want:"Real motivation, not just \"it pays well.\"",a:"In every job I've had, I was the person fixing the process: the reservation system, the scheduling, the handoffs between teams. I love solving the problem behind the problem. AI tools now let me build those fixes myself, and Pursuit gave me the structure to do it seriously.",tip:"Tie it to a concrete moment you remember."},
- {id:"o3",c:"opening",q:"Why this company?",want:"Proof you did your homework.",a:"I've been following [company] because of [specific product, mission or recent news]. I really connect with [a value from their site]. With my background in [customer experience / training / the arts], I think I could help with [something from the job post].",tip:"Research this before every call. One specific detail beats three general ones."},
- {id:"o4",c:"opening",q:"Why this role?",want:"A clear match between the job post and your experience.",a:"The posting talks about [two duties from the post]. That's what I've done for years in hospitality and training, just with guests and staff instead of users. Now I can also handle the technical side, since I've built and shipped AI tools, so I can speak to both the customer and the engineering team.",tip:"Quote two phrases from the job post back to them."},
- {id:"o5",c:"opening",q:"Walk me through your resume.",want:"Time order, one or two sentences per role, each connected to the next.",a:"I started in performing arts as an actor and puppeteer, and became a licensed massage therapist running my own practice, which taught me marketing, finances and clients. In restaurants I moved into management at Union Square Hospitality Group, Eataly and The Hospitality Department, and I trained staff and wrote training books along the way. At Goldbelly and RH I did customer experience remotely. Each role pulled me closer to systems and technology, which led me to Pursuit.",tip:"Keep it under two minutes. Stop on the role that leads into this job."},
- {id:"o6",c:"opening",q:"What's a project you're proud of?",want:"Something real, your specific part, and the impact.",a:"Ask BPL, my capstone. My team of four built an AI assistant for Brooklyn Public Library staff. Staff ask a policy question in plain English and get an answer drawn from the library's actual policy documents. It's for a real client with real users, so accuracy matters. My part was [your contribution].",tip:"Backup: the feature your team shipped on Excalidraw's open-source codebase."},
- {id:"b1",c:"behavioral",star:1,q:"Tell me about a time you dealt with an unhappy customer.",want:"Empathy, ownership and a good outcome.",a:"S: At Eataly, a guest was upset because [what went wrong].\nT: As the manager on the floor, it was on me to fix it.\nA: I listened without interrupting, apologized, and told them exactly what I'd do. Then I [your fix].\nR: They [came back / left a good review]. Most angry customers want to feel heard first.",tip:"Add a tech link: \"Users get frustrated with software too, and it's the same skill.\""},
- {id:"b2",c:"behavioral",star:1,q:"Tell me about a time you led a team under pressure.",want:"Calm leadership with clear communication.",a:"S: I've been a float captain for the Macy's Thanksgiving Day Parade for nine years.\nT: I organize my team, walk the route and get the float through the finish line for the live NBC broadcast.\nA: One year [a specific challenge], so I [briefed the team / reassigned roles / stayed calm].\nR: We hit our mark on live TV. When there's no second take, preparation and clear communication are everything.",tip:"This story is memorable. Use it."},
- {id:"b3",c:"behavioral",star:1,q:"Tell me about a conflict with a coworker or teammate.",want:"You can disagree respectfully and still deliver.",a:"S: On a Pursuit team project, a teammate and I disagreed about [approach].\nT: We had a deadline and needed to agree.\nA: I asked to talk one-on-one, listened to their reasoning, and shared mine. We [compromised / tested both / asked the client].\nR: We shipped on time and worked better together after. Argue about the idea, not the person.",tip:"Never make the other person the villain."},
- {id:"b4",c:"behavioral",star:1,q:"Tell me about a time you failed or made a mistake.",want:"Honesty and what you changed afterward.",a:"S/T: [A real, moderate mistake: a scheduling error, a bug, a missed handoff.]\nA: I owned it right away, told my team, and fixed it by [action].\nR: Then I [changed a process or habit] so it wouldn't happen again.",tip:"Pick something real but not disastrous. Spend most of the time on the fix."},
- {id:"b5",c:"behavioral",star:1,q:"Tell me about a time you had to learn something new quickly.",want:"How you learn, not just that you did.",a:"When I started Pursuit, I'd never [used Git / worked in a large codebase]. Within weeks my team was shipping a feature on Excalidraw's open-source code. I learned by breaking it into small pieces, asking questions early, using AI to explain code, and then checking it myself.",tip:"Name your learning method. Teaching roles love this."},
- {id:"b6",c:"behavioral",star:1,q:"Tell me about a time you taught or trained someone.",want:"You can make complex things clear for others.",a:"S: In hospitality I trained new bartenders and servers, and I wrote the front-of-house training book.\nT: New hires needed to be floor-ready in [timeframe].\nA: I broke the job into short lessons, demonstrated, let them practice, and checked in after each shift.\nR: [Result: faster ramp-up, fewer mistakes]. The same approach works for teaching people new AI tools.",tip:"Great for AI enablement and customer success roles."},
- {id:"b7",c:"behavioral",star:1,q:"How do you handle many tasks at once?",want:"A real system you use.",a:"Running four venues at once at The Hospitality Department meant constant juggling. I'd [start each shift with a priorities list, delegate to leads, and check in at set times]. In tech I do the same with a task board or GitHub issues.",tip:"Describe the system, then one example."},
- {id:"l1",c:"logistics",q:"What are your salary expectations?",want:"A researched range, said calmly.",a:"Based on my research for this role in New York, I'm looking in the range of [low end] to [high end]. I'm flexible depending on the full package and growth opportunity.",tip:"NYC job posts must list a pay range by law. Start there."},
- {id:"l2",c:"logistics",q:"When can you start?",want:"A clear, honest date.",a:"I've wrapped up Pursuit's fellowship and I can start [date].",tip:"Know your answer before the call."},
- {id:"l3",c:"logistics",q:"Remote, hybrid or in-office?",want:"Flexibility plus your real preference.",a:"I'm based in Queens, so I'm happy with [your preference]. I've also worked fully remote before, at RH, so I'm comfortable with that setup.",tip:"Check the job post first so you aren't surprised."},
- {id:"l4",c:"logistics",q:"Why are you leaving hospitality?",want:"A positive reason, no complaints.",a:"I'm not running away from hospitality, I'm taking it with me. The best part of that work was solving problems for people, and tech lets me do that at a bigger scale.",tip:"Never criticize a past employer."},
- {id:"s1",c:"swe",q:"What happens when you type a URL into a browser?",want:"The basic flow in plain language.",a:"The browser looks up the site's address through DNS, which works like a phone book for the internet. It sends a request to that server, the server sends back HTML, CSS and JavaScript, and the browser turns that into the page you see.",tip:"Keep it simple unless they ask for more detail."},
- {id:"s2",c:"swe",q:"What's the difference between frontend and backend?",want:"A clear split, ideally with an analogy.",a:"Frontend is what the user sees and clicks: layout, buttons and forms. Backend is behind the scenes: the server, the database and the logic that saves and fetches data. In a restaurant, frontend is the dining room and backend is the kitchen.",tip:"Your restaurant analogies are a strength. Use them."},
- {id:"s3",c:"swe",q:"What is an API?",want:"A definition plus an example.",a:"An API is a set of rules that lets two programs talk to each other. One sends a request and the other sends back data. It's like a waiter: you don't walk into the kitchen, you give your order to the waiter and they bring back your food.",tip:"Mention an API you've actually used, like Google Maps in your hackathon app."},
- {id:"s4",c:"swe",q:"What is Git and why do teams use it?",want:"Branches, pull requests and review.",a:"Git tracks every change to code so you can see history and undo mistakes. Teams work on branches, then open a pull request so others can review before merging into main. I used that workflow on our Excalidraw feature.",tip:""},
- {id:"s5",c:"swe",q:"How do you debug a problem?",want:"A calm, step-by-step method.",a:"First I reproduce the bug. Then I read the error message and narrow down where it starts using console logs or dev tools. I change one thing at a time and test. If I'm stuck I search, ask AI to explain, or ask a teammate, and I always confirm the fix works.",tip:""},
- {id:"s6",c:"swe",q:"How do you use AI coding tools?",want:"Useful, but you stay responsible.",a:"I use them to explain unfamiliar code, draft boilerplate and brainstorm approaches. I treat the output like a first draft: I read it, test it and make sure I understand it before I commit it. AI speeds me up, but I'm responsible for the code.",tip:"More companies ask this every month."},
- {id:"a1",c:"ai",q:"What makes a good prompt?",want:"Role, context, task, format, examples, and what to do when unsure.",a:"A good prompt is clear and specific. It gives the AI a role, the context it needs, the exact task, the format I want back, and examples of good and bad answers. It also says what to do when the AI doesn't know, like \"say you're not sure instead of guessing.\"",tip:""},
- {id:"a2",c:"ai",q:"A prompt gives bad or inconsistent results. How do you fix it?",want:"A test-and-compare method, not guessing.",a:"I collect examples of the bad outputs to see the pattern. I check whether the prompt is vague, missing context or asking too much at once. Then I change one thing at a time and re-test on the same set of inputs so the comparison is fair.",tip:""},
- {id:"a3",c:"ai",q:"How do you know if an AI's answer is good?",want:"Test sets, rubrics, edge cases.",a:"I build a small test set of real questions with expected answers, then score outputs against a checklist: accurate, complete, right format and safe. On Ask BPL the key check is whether the answer matches the library's actual policy, because a wrong answer could cause real problems for staff.",tip:""},
- {id:"a4",c:"ai",q:"What is a hallucination, and how do you reduce it?",want:"Grounding, citations and permission to say \"I don't know.\"",a:"A hallucination is when the AI confidently makes something up. I reduce it by giving the AI real source material, telling it to only use that material, asking it to cite where the answer came from, and telling it to say \"I don't know\" when the answer isn't there.",tip:""},
- {id:"a5",c:"ai",q:"What is RAG?",want:"Retrieve first, then generate.",a:"RAG means retrieval-augmented generation. The system first searches your own documents for the relevant pieces, then gives those to the AI to answer from. That's how Ask BPL works: it pulls the right section of the library's policies, then the AI explains it in plain language.",tip:""},
- {id:"a6",c:"ai",q:"How would you teach a non-technical team to use an AI tool?",want:"An enablement mindset: start small, practice, follow up.",a:"I'd start with one task they already do every week and show how the tool helps with it. Then a short hands-on session where everyone tries it with their own work, a one-page cheat sheet, and office hours a week later to answer questions. I'd track who's using it and gather feedback to improve the training.",tip:"Lean on your teaching artist and staff-training background here."},
- {id:"a7",c:"ai",q:"When should you NOT use AI?",want:"Judgment and risk awareness.",a:"When a mistake would be costly and no human is checking, when a simple rule or regular code would be more reliable, or when the data is private and shouldn't go to an outside model. Sometimes a spreadsheet is the better answer.",tip:""},
- {id:"c1",c:"cs",q:"A customer says the integration stopped syncing this morning. What do you do?",want:"Empathy first, then logical troubleshooting.",a:"Reply right away: acknowledge the problem, apologize for the disruption, ask when it last worked and for a screenshot of any error, and promise an update time.\n\nThen: check the status page, confirm their API key or login hasn't expired (look for 401 errors), read the sync logs for the first failure, try to reproduce it in a test account, and escalate to engineering with details if it's a bug, keeping the customer updated.",tip:"Graders look for empathy, a next step and a promised update time."},
- {id:"c2",c:"cs",q:"How would you onboard a new customer to our product?",want:"A clear plan with milestones.",a:"I'd start with a kickoff call to learn their goals and what success looks like. Then a short setup plan with dates, a hands-on training session for their team, and a check-in after two weeks to see what's working. I'd watch usage and reach out early if adoption is slow.",tip:"This is like training new staff on opening day."},
- {id:"c3",c:"cs",q:"A customer wants a feature we don't have. What do you say?",want:"Honest, helpful, and you log the feedback.",a:"I'd thank them, ask what problem they're trying to solve, and share any workaround that exists today. I'd be honest that it isn't available, log the request for the product team with their use case, and follow up if it gets built.",tip:"Never promise a feature you can't guarantee."},
- {id:"c4",c:"cs",q:"A big account is using the product less and may not renew. What do you do?",want:"Proactive, data-informed retention.",a:"First I'd look at the usage data to see what dropped and when. Then I'd reach out to my main contact, not to sell, but to ask how things are going and what's changed on their side, like a new team lead or new goals. Based on that, I'd offer a refresher training, connect them with a feature that fits their new goals, or bring in support for any open issues. I'd set a check-in plan through renewal.",tip:"Interviewers want to hear that you act before the customer complains."},
- {id:"c5",c:"cs",q:"How do you prioritize when several customers need you at once?",want:"A clear triage method.",a:"I sort by impact and urgency: anything blocking a customer's business comes first, then deadlines, then routine requests. I tell each customer when they'll hear from me so nobody feels ignored. On a busy restaurant floor I did the same thing every night: the table with a problem gets you first, but everyone gets acknowledged.",tip:""},
- {id:"c6",c:"cs",q:"What metrics matter in customer success?",want:"You know how the role is measured.",a:"Retention and churn rate, net revenue retention, product adoption and usage, customer satisfaction scores like CSAT or NPS, time to first value during onboarding, and support ticket trends. Together they show whether customers are getting real value.",tip:"Know these terms by name. They come up often."},
- {id:"e1",c:"se",q:"Explain a technical concept to me as if I were a non-technical customer.",want:"Clarity, an analogy, and checking for understanding.",a:"Pick something you know well, like RAG: \"Imagine a new library staff member who's smart but hasn't read the policy binder. Instead of guessing, they look up the right page first and then answer. That's what our assistant does: it finds the relevant policy, then explains it in plain English.\" Then check in: \"Does that match how your team looks up answers today?\"",tip:"Practice this one out loud a lot. It's the core of solutions and enablement roles."},
- {id:"e2",c:"se",q:"Walk me through a demo of a product you've built.",want:"A story built around the user's problem, not a feature tour.",a:"Start with the problem: \"Library staff spend time digging through long policy documents.\" Show one realistic task end to end: ask a real question and get a sourced answer. Point out one detail that builds trust, like the citation. End with the impact and what you'd build next. Keep it to 5–10 minutes and leave time for questions.",tip:"Have Ask BPL ready to demo with a backup recording in case the live demo fails."},
- {id:"e3",c:"se",q:"A prospect asks a technical question you can't answer. What do you do?",want:"Honesty plus a reliable follow-up.",a:"I'd say: \"That's a great question, and I want to give you an accurate answer rather than guess. Let me confirm with our engineering team and get back to you by [day].\" Then I'd write it down, get the answer, and follow up when I said I would. Trust matters more than looking like you know everything.",tip:""},
- {id:"e4",c:"se",q:"How would you find out what a customer actually needs?",want:"Discovery questions, listening, and confirming.",a:"I'd ask open questions: What does your team do today? What's slow or frustrating? What would success look like six months from now? Who else is affected? Then I'd summarize what I heard back to them to confirm, before suggesting any solution.",tip:"Your hospitality instincts help here. Reading a table is discovery."},
- {id:"b8",c:"behavioral",star:1,q:"Tell me about a time you improved a process.",want:"You spot inefficiency and fix it with measurable results.",a:"S: At [venue], [a process] was slow or error-prone.\nT: I wanted to make it faster and more consistent for the team.\nA: I [mapped the steps, removed one, created a checklist or tool, trained the team on it].\nR: [Measurable result: saved time, fewer errors, better reviews].",tip:"Process improvement maps directly to implementation and AI ops roles."},
- {id:"b9",c:"behavioral",star:1,q:"Tell me about a time you used data to make a decision.",want:"You look at evidence, not just instinct.",a:"S: At [Goldbelly / Eataly], we noticed [a pattern: complaints, slow nights, staffing gaps].\nT: I needed to decide [what to change].\nA: I looked at [reservations, sales reports, ticket counts] and found [insight].\nR: We [changed X], which led to [result].",tip:"Even simple data counts: covers per night, ticket volume, review scores."},
- {id:"o7",c:"opening",q:"You're new to tech. Why should we hire you?",want:"Confidence about your transition.",a:"I'm newer to tech, but not new to work. I've managed four venues, trained staff and handled thousands of customers, which is client management and enablement under pressure. And I've shipped real AI tools, like Ask BPL for Brooklyn Public Library. I bring people skills that are hard to teach, and I've proven I can learn the technical side quickly.",tip:"Expect this question. Say it with confidence, not apology."},
- {id:"o8",c:"opening",q:"What questions do you have for us?",want:"Curiosity and real interest in the job.",a:"What does success look like in the first 90 days?\nWhat's the biggest challenge the team is working on right now?\nHow does the team use AI tools day to day?\nWhat do you enjoy most about working here?\nWhat are the next steps in the process?",tip:"Always ask at least two. Never say \"No, I think you covered everything.\""}
-];
-const QUIZ = [
- {q:"What does HTTP status 404 mean?",o:["Server error","Not found","Unauthorized","Created"],a:1,e:"404 means the page or resource doesn't exist."},
- {q:"What does HTTP status 500 mean?",o:["Something broke on the server","Request was bad","Success","Not logged in"],a:0,e:"500 is a server error: the problem is on their end."},
- {q:"Which status code means \"not logged in or bad credentials\"?",o:["403","200","401","201"],a:2,e:"401 Unauthorized. 403 means you're logged in but not allowed."},
- {q:"Which HTTP method is used to create new data?",o:["GET","POST","DELETE","HEAD"],a:1,e:"POST creates. GET reads, PUT/PATCH updates, DELETE removes."},
- {q:"Which SQL keyword filters rows?",o:["SELECT","FROM","WHERE","ORDER"],a:2,e:"WHERE filters rows, e.g. WHERE city = 'New York'."},
- {q:"Which SQL keyword removes duplicate results?",o:["UNIQUE","DISTINCT","GROUP","ONLY"],a:1,e:"SELECT DISTINCT city FROM station returns each city once."},
- {q:"What does JOIN do in SQL?",o:["Deletes a table","Combines rows from two tables","Sorts results","Counts rows"],a:1,e:"JOIN combines rows from two tables using a matching column."},
- {q:"Which Git command sends your commits to GitHub?",o:["git pull","git clone","git push","git add"],a:2,e:"git push sends commits up. git pull brings others' changes down."},
- {q:"What is a pull request?",o:["Downloading a repo","A request to review and merge your changes","Deleting a branch","Undoing a commit"],a:1,e:"A PR lets teammates review your branch before it merges into main."},
- {q:"What is an AI \"hallucination\"?",o:["A slow response","The AI confidently making something up","A crashed model","A long prompt"],a:1,e:"Grounding the AI in real sources helps reduce hallucinations."},
- {q:"What does RAG stand for?",o:["Random answer generation","Retrieval-augmented generation","Rapid AI grading","Rule-based agent"],a:1,e:"Search your documents first, then let the AI answer from them."},
- {q:"A lower temperature setting makes AI output…",o:["More creative","More consistent","Longer","Faster"],a:1,e:"Low temperature means less randomness and more consistent answers."},
- {q:"What is a context window?",o:["The chat sidebar","How much text the AI can see at once","A browser tab","A system error"],a:1,e:"It covers the prompt, documents and conversation the model can read."},
- {q:"What are tokens?",o:["Passwords","Chunks of text the AI reads and charges by","Cookies","API keys only"],a:1,e:"A token is roughly part of a word."},
- {q:"What is an API?",o:["A database","Rules that let two programs talk","A coding language","A web browser"],a:1,e:"Think of a waiter carrying orders between you and the kitchen."},
- {q:"What does DNS do?",o:["Stores passwords","Turns a website name into an address","Styles a page","Runs JavaScript"],a:1,e:"DNS is like a phone book for the internet."},
- {q:"Frontend vs backend: which handles the database?",o:["Frontend","Backend","Neither","CSS"],a:1,e:"Backend: server, database and logic. Frontend: what users see."},
- {q:"In STAR, what does the R stand for?",o:["Reason","Role","Result","Review"],a:2,e:"Situation, Task, Action, Result. End with a result, ideally a number."},
- {q:"What is the result of 7 % 2 in JavaScript?",o:["3.5","1","0","3"],a:1,e:"% gives the remainder. 7 divided by 2 is 3 remainder 1."},
- {q:"What are evals?",o:["Code reviews","Repeatable tests that measure an AI system","Job interviews","Error logs"],a:1,e:"Evals let you compare prompt versions fairly."}
-];
-const CODE = [
- {id:"k1",t:"Simple Array Sum",lvl:"Easy",task:"Given a list of numbers, return their total.",ex:"[1, 2, 3, 4, 10, 11]  →  31",starter:"function simpleArraySum(ar) {\n  // your code here\n}",hint:"Start a total at 0, loop through each number, and add it to the total.",sol:"function simpleArraySum(ar) {\n  let total = 0;\n  for (const n of ar) {\n    total += n;\n  }\n  return total;\n}"},
- {id:"k2",t:"Compare the Triplets",lvl:"Easy",task:"Alice and Bob each have three scores. Compare them position by position. The higher score gets a point, and ties get nothing. Return [alice, bob].",ex:"Alice [5, 6, 7], Bob [3, 6, 10]  →  [1, 1]",starter:"function compareTriplets(a, b) {\n  // your code here\n}",hint:"Keep two counters and loop i from 0 to 2, comparing a[i] and b[i].",sol:"function compareTriplets(a, b) {\n  let alice = 0, bob = 0;\n  for (let i = 0; i < 3; i++) {\n    if (a[i] > b[i]) alice++;\n    else if (a[i] < b[i]) bob++;\n  }\n  return [alice, bob];\n}"},
- {id:"k3",t:"Mini-Max Sum",lvl:"Easy",task:"Given 5 numbers, print the smallest and largest totals you can make by adding exactly 4 of them.",ex:"[1, 2, 3, 4, 5]  →  10 14",starter:"function miniMaxSum(arr) {\n  // your code here\n}",hint:"Add everything. Subtract the biggest number for the minimum and the smallest number for the maximum.",sol:"function miniMaxSum(arr) {\n  const total = arr.reduce((sum, n) => sum + n, 0);\n  const min = total - Math.max(...arr);\n  const max = total - Math.min(...arr);\n  console.log(min, max);\n}"},
- {id:"k4",t:"Birthday Cake Candles",lvl:"Easy",task:"A kid can only blow out the tallest candles. Count how many candles are the tallest.",ex:"[3, 2, 1, 3]  →  2",starter:"function birthdayCakeCandles(candles) {\n  // your code here\n}",hint:"Find the maximum with Math.max, then count how many equal it.",sol:"function birthdayCakeCandles(candles) {\n  const tallest = Math.max(...candles);\n  return candles.filter(c => c === tallest).length;\n}"},
- {id:"k5",t:"Staircase",lvl:"Easy",task:"Print a right-aligned staircase of # symbols with n steps.",ex:"n = 4\n   #\n  ##\n ###\n####",starter:"function staircase(n) {\n  // your code here\n}",hint:"For each row i from 1 to n, print (n - i) spaces followed by i # symbols. Try ' '.repeat().",sol:"function staircase(n) {\n  for (let i = 1; i <= n; i++) {\n    console.log(' '.repeat(n - i) + '#'.repeat(i));\n  }\n}"},
- {id:"k6",t:"Time Conversion",lvl:"Medium",task:"Convert a 12-hour time string to 24-hour time.",ex:"\"07:05:45PM\"  →  \"19:05:45\"\n\"12:00:00AM\"  →  \"00:00:00\"",starter:"function timeConversion(s) {\n  // your code here\n}",hint:"Split off the last two letters (AM/PM). Watch the edge cases: 12 AM becomes 00, and 12 PM stays 12.",sol:"function timeConversion(s) {\n  const period = s.slice(-2);\n  let [hh, mm, ss] = s.slice(0, -2).split(':');\n  let hour = parseInt(hh);\n\n  if (period === 'AM' && hour === 12) hour = 0;\n  if (period === 'PM' && hour !== 12) hour += 12;\n\n  return String(hour).padStart(2, '0') + ':' + mm + ':' + ss;\n}"},
- {id:"k7",t:"Revising the Select Query",lvl:"SQL",task:"From the CITY table, get all American cities (COUNTRYCODE 'USA') with a population over 100,000.",ex:"Columns: NAME, COUNTRYCODE, POPULATION",starter:"-- write your query\n",hint:"Use WHERE with two conditions joined by AND.",sol:"SELECT * FROM CITY\nWHERE COUNTRYCODE = 'USA' AND POPULATION > 100000;"},
- {id:"k8",t:"Weather Observation Station 3",lvl:"SQL",task:"From the STATION table, list cities that have an even ID number, with no duplicates.",ex:"Columns: ID, CITY",starter:"-- write your query\n",hint:"DISTINCT removes duplicates. MOD(ID, 2) = 0 checks for even numbers.",sol:"SELECT DISTINCT CITY FROM STATION\nWHERE MOD(ID, 2) = 0;"}
-];
-
-/* ---------- STATE ---------- */
-const KEY="callback-coach-v1";
-let S={xp:0,ratings:{},solved:{},days:[],quizBest:0};
-try{const raw=localStorage.getItem(KEY); if(raw) S=Object.assign(S,JSON.parse(raw));}catch(e){}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
-const $=s=>document.querySelector(s);
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const LEVELS=[[0,"Extra"],[60,"Understudy"],[180,"Ensemble"],[360,"Featured"],[600,"Lead"],[900,"Headliner"]];
-function today(){const d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
-function streak(){
-  const set=new Set(S.days); let n=0; const d=new Date();
-  if(!set.has(today())) d.setDate(d.getDate()-1);
-  while(set.has(d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate())){n++;d.setDate(d.getDate()-1);}
-  return n;
-}
-function award(n,msg){
-  S.xp+=n; if(!S.days.includes(today())) S.days.push(today()); save(); renderStats();
-  toast("+"+n+" XP · "+msg);
-}
-function renderStats(){
-  $("#xp").textContent=S.xp;
-  let l=LEVELS[0][1]; for(const [min,name] of LEVELS) if(S.xp>=min) l=name;
-  $("#lvl").textContent=l; $("#streak").textContent=streak();
-}
-let tt; function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("show"),1800);}
-
-/* ---------- TABS ---------- */
-document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{
-  document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected",x===b));
-  document.querySelectorAll("[role=tabpanel]").forEach(p=>p.hidden=p.id!=="p-"+b.dataset.tab);
-  stopTimer();
-}));
-
-/* ---------- TIMER ---------- */
-let timer=null;
-function timerHTML(id){return `<div class="timer"><svg class="ring" viewBox="0 0 36 36" aria-hidden="true"><circle class="trk" cx="18" cy="18" r="15"/><circle class="val" id="${id}-r" cx="18" cy="18" r="15" stroke-dasharray="94.25" stroke-dashoffset="0"/></svg><span class="clock" id="${id}-c">1:30</span><button class="btn" id="${id}-b">Start 90s</button></div>`;}
-function stopTimer(){if(timer){clearInterval(timer.h);timer=null;}}
-function bindTimer(id,secs=90,autostart=false){
-  const c=$("#"+id+"-c"), r=$("#"+id+"-r"), b=$("#"+id+"-b");
-  const fmt=s=>{const neg=s<0;s=Math.abs(s);return (neg?"+":"")+Math.floor(s/60)+":"+String(s%60).padStart(2,"0");};
-  let left=secs;
-  const draw=()=>{c.textContent=fmt(left);c.classList.toggle("over",left<0);r.style.strokeDashoffset=94.25*(1-Math.max(left,0)/secs);};
-  const start=()=>{stopTimer();left=secs;draw();b.textContent="Stop";timer={h:setInterval(()=>{left--;draw();},1000)};};
-  b.onclick=()=>{if(timer){stopTimer();b.textContent="Restart";}else start();};
-  draw(); if(autostart) start();
-}
-
-/* ---------- PRACTICE ---------- */
-let cat="opening", order=[], idx=0, revealed=false;
-const weight=id=>({l:3,m:2,g:1}[S.ratings[id]]||2.5);
-function buildDeck(){
-  const list=QS.filter(q=>q.c===cat);
-  order=list.map(q=>({q,k:Math.random()/weight(q.id)})).sort((a,b)=>a.k-b.k).map(x=>x.q);
-  idx=0; revealed=false;
-}
-function renderCats(){
-  $("#cats").innerHTML=Object.entries(CATS).map(([k,v])=>{
-    const n=QS.filter(q=>q.c===k).length, done=QS.filter(q=>q.c===k&&S.ratings[q.id]==="g").length;
-    return `<button class="chip" aria-pressed="${k===cat}" data-c="${k}">${v}<span class="n">${done}/${n}</span></button>`;
-  }).join("");
-  document.querySelectorAll("#cats .chip").forEach(b=>b.onclick=()=>{cat=b.dataset.c;buildDeck();renderCats();renderCard();});
-}
-function renderCard(){
-  stopTimer();
-  const q=order[idx];
-  const star=q.star?`<div class="star" role="group" aria-label="STAR checklist">${[["S","Situation"],["T","Task"],["A","Action"],["R","Result"]].map(([l,n])=>`<label><input type="checkbox" id="st-${l}"><b>${l}</b>${n}</label>`).join("")}</div>`:"";
-  $("#pcard").innerHTML=`
-    <div class="cardtop"><span class="tag">${CATS[q.c]}</span><span class="count">Card ${idx+1} of ${order.length}</span>${timerHTML("pt")}</div>
-    <p class="q">${esc(q.q)}</p>
-    <p class="want"><b>What they're listening for:</b> ${esc(q.want)}</p>
-    ${star}
-    <label for="ans" class="tip">Jot your key points (optional), then say it out loud.</label>
-    <textarea id="ans" placeholder="My answer…"></textarea>
-    <div id="rev"></div>`;
-  bindTimer("pt");
-  renderReveal();
-  renderDots();
-}
-function renderReveal(){
-  const q=order[idx];
-  if(!revealed){
-    $("#rev").innerHTML=`<div class="row"><button class="btn primary" id="show">Show sample answer</button><button class="btn ghost" id="skip">Skip</button></div>`;
-    $("#show").onclick=()=>{revealed=true;stopTimer();renderReveal();};
-    $("#skip").onclick=next;
-    return;
-  }
-  $("#rev").innerHTML=`
-    <div class="sample"><h4>Sample answer · make it yours</h4>${esc(q.a)}</div>
-    ${q.tip?`<p class="tip"><b>Coach's note:</b> ${esc(q.tip)}</p>`:""}
-    <p class="tip" style="margin:0">How did that go?</p>
-    <div class="rate">
-      <button class="g" data-r="g">Nailed it<small>+10 XP</small></button>
-      <button class="m" data-r="m">Getting there<small>+5 XP</small></button>
-      <button class="l" data-r="l">Practice more<small>+2 XP</small></button>
-    </div>`;
-  document.querySelectorAll(".rate button").forEach(b=>b.onclick=()=>{
-    const r=b.dataset.r; S.ratings[q.id]=r;
-    award({g:10,m:5,l:2}[r],{g:"Bravo!",m:"Nice rep",l:"Every rehearsal counts"}[r]);
-    renderCats(); next();
-  });
-}
-function next(){idx=(idx+1)%order.length; if(idx===0) buildDeck(); revealed=false; renderCard();}
-function renderDots(){
-  $("#pdots").innerHTML=order.map((q,i)=>`<span class="dot ${S.ratings[q.id]||""} ${i===idx?"cur":""}" title="${esc(q.q)}"></span>`).join("");
-}
-
-/* ---------- QUIZ ---------- */
-let qz=null;
-function newQuiz(){
-  qz={items:[...QUIZ].sort(()=>Math.random()-.5).slice(0,10),i:0,score:0,picked:null};
-  renderQuiz();
-}
-function renderQuiz(){
-  const c=$("#qcard");
-  if(!qz){c.innerHTML=`<p class="q">Ready for 10 questions?</p><p class="want">Best score so far: <b>${S.quizBest}/10</b></p><div class="row"><button class="btn primary" id="qs">Start quiz</button></div>`;$("#qs").onclick=newQuiz;return;}
-  if(qz.i>=qz.items.length){
-    if(qz.score>S.quizBest){S.quizBest=qz.score;save();}
-    const msg=qz.score>=9?"Standing ovation.":qz.score>=7?"Strong show. Review the misses and run it again.":"Good rehearsal. Run it again tomorrow and watch the score climb.";
-    c.innerHTML=`<span class="tag">Final score</span><p class="q">${qz.score} / 10</p><div class="meter"><i style="width:${qz.score*10}%"></i></div><p class="want">${msg}</p><div class="row"><button class="btn primary" id="qa">New quiz</button></div>`;
-    $("#qa").onclick=newQuiz; return;
-  }
-  const it=qz.items[qz.i];
-  c.innerHTML=`
-    <div class="cardtop"><span class="tag">Question ${qz.i+1} of 10</span><span class="count">Score ${qz.score}</span></div>
-    <div class="meter"><i style="width:${qz.i*10}%"></i></div>
-    <p class="q">${esc(it.q)}</p>
-    <div class="opts">${it.o.map((o,j)=>`<button class="opt" data-j="${j}"><span class="k">${"ABCD"[j]}</span><span>${esc(o)}</span></button>`).join("")}</div>
-    <div id="qf"></div>`;
-  document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
-    if(qz.picked!==null) return;
-    const j=+b.dataset.j; qz.picked=j;
-    document.querySelectorAll(".opt").forEach(x=>{const k=+x.dataset.j; if(k===it.a) x.classList.add("right"); else if(k===j) x.classList.add("wrong"); x.disabled=true;});
-    const ok=j===it.a; if(ok){qz.score++;award(5,"Correct");}
-    $("#qf").innerHTML=`<div class="feedback"><b class="${ok?"ok":"no"}">${ok?"Correct.":"Not quite."}</b> ${esc(it.e)}</div><div class="row" style="margin-top:12px"><button class="btn primary" id="qn">${qz.i===9?"See score":"Next question"}</button></div>`;
-    $("#qn").onclick=()=>{qz.i++;qz.picked=null;renderQuiz();};
-    $("#qn").focus();
-  });
-}
-
-/* ---------- CODE ---------- */
-let cur=CODE[0].id, drafts={};
-function renderPlist(){
-  $("#plist").innerHTML=CODE.map(p=>`<button class="pitem" aria-current="${p.id===cur}" data-id="${p.id}"><span><b>${esc(p.t)}</b><small>${p.lvl}</small></span><span class="badge ${S.solved[p.id]?"done":""}">${S.solved[p.id]?"Solved":"To do"}</span></button>`).join("");
-  document.querySelectorAll(".pitem").forEach(b=>b.onclick=()=>{saveDraft();cur=b.dataset.id;renderPlist();renderCode();});
-}
-function saveDraft(){const t=$("#cd"); if(t) drafts[cur]=t.value;}
-function renderCode(){
-  const p=CODE.find(x=>x.id===cur);
-  const c=$("#ccard");
-  c.innerHTML=`
-    <div class="cardtop"><span class="tag">${p.lvl==="SQL"?"SQL":"JavaScript"} · ${p.lvl}</span>${timerHTML("ct")}</div>
-    <p class="q">${esc(p.t)}</p>
-    <p class="want">${esc(p.task)}</p>
-    <pre>${esc(p.ex)}</pre>
-    <label for="cd" class="tip">Your solution. Talk through it out loud as you type.</label>
-    <textarea class="code" id="cd" spellcheck="false"></textarea>
-    <div class="row">
-      <button class="btn" id="hb">Show hint</button>
-      <button class="btn" id="sb">Show solution</button>
-      <button class="btn primary" id="mb" ${S.solved[p.id]?"disabled":""}>${S.solved[p.id]?"Solved":"Mark solved"}</button>
-    </div>
-    <div id="hint"></div><div id="sol"></div>`;
-  $("#cd").value=drafts[p.id]??p.starter;
-  bindTimer("ct",p.lvl==="Medium"?900:600);
-  $("#ct-b").textContent="Start timer";
-  $("#hb").onclick=()=>{$("#hint").innerHTML=`<div class="feedback"><b>Hint:</b> ${esc(p.hint)}</div>`;};
-  $("#sb").onclick=()=>{$("#sol").innerHTML=`<pre>${esc(p.sol)}</pre><p class="tip">Test the edge cases too: an empty list, one item, the biggest and smallest values.</p>`;};
-  $("#mb").onclick=()=>{S.solved[p.id]=1;award(15,"Problem solved");renderPlist();renderCode();};
-}
-
-/* ---------- MOCK ---------- */
-let mk=null;
-const ROLE={cs:"Customer success / AI enablement",se:"Solutions engineer",ai:"AI prompt engineer / AI ops",swe:"Software engineer"};
-function renderMock(){
-  const m=$("#mock");
-  if(!mk){
-    m.innerHTML=`<div class="stage">
-      <span class="tag" style="align-self:flex-start">Places, please</span>
-      <h2>Mock recruiter pre-screen</h2>
-      <p class="lede">Seven questions in the order a real 20–30 minute recruiter screen usually follows: an opener, two behavioral, one logistics, two for your target role, and the closing "Do you have questions for us?" Each gets a 90-second clock that starts on its own. Sit up, look at the camera and answer out loud as if it's the real call. Recording yourself on your phone is the fastest way to improve.</p>
-      <div class="row"><label for="role">Target role</label>
-      <select id="role">${Object.entries(ROLE).map(([k,v])=>`<option value="${k}">${v}</option>`).join("")}</select>
-      <button class="btn primary" id="go">Start the screen</button></div>
-    </div>`;
-    $("#go").onclick=()=>{
-      const role=$("#role").value, pick=(c,n)=>QS.filter(q=>q.c===c).sort(()=>Math.random()-.5).slice(0,n);
-      const roleQs=role==="cs"?[...pick("cs",1),...pick("ai",1)]:pick(role,2);
-      mk={qs:[QS[0],...pick("behavioral",2),...pick("logistics",1),...roleQs,QS.find(q=>q.id==="o8")],i:0,role,show:false};
-      renderMock();
-    };
-    return;
-  }
-  if(mk.i>=mk.qs.length){
-    stopTimer();
-    m.innerHTML=`<div class="card"><span class="tag">That's a wrap</span><p class="q">Screen complete. +25 XP</p>
-      <div class="sum"><div><b>${mk.qs.length}</b><span>Questions answered</span></div><div><b>${Math.round(mk.qs.length*1.5)}</b><span>Minutes of practice</span></div><div><b>${S.xp}</b><span>Total XP</span></div></div>
-      <p class="want"><b>Now close strong.</b> Before hanging up on a real call, ask two of these:</p>
-      <ul class="checklist"><li>What does success look like in the first 90 days?</li><li>What's the biggest challenge the team is working on right now?</li><li>How does the team use AI tools day to day?</li><li>What are the next steps in the process?</li></ul>
-      <p class="tip">Then send a short thank-you email within 24 hours.</p>
-      <div class="row"><button class="btn primary" id="again">Run another screen</button></div></div>`;
-    $("#again").onclick=()=>{mk=null;renderMock();};
-    return;
-  }
-  const q=mk.qs[mk.i];
-  m.innerHTML=`<div class="card">
-    <div class="cardtop"><span class="tag">Recruiter · ${CATS[q.c]}</span><span class="count">${mk.i+1} of ${mk.qs.length}</span>${timerHTML("mt")}</div>
-    <div class="meter"><i style="width:${mk.i/mk.qs.length*100}%"></i></div>
-    <p class="q">"${esc(q.q)}"</p>
-    <p class="want"><b>Listening for:</b> ${esc(q.want)}</p>
-    <div id="msamp">${mk.show?`<div class="sample"><h4>Sample answer</h4>${esc(q.a)}</div>`:""}</div>
-    <div class="row">
-      <button class="btn" id="peek">${mk.show?"Hide sample":"Peek at sample"}</button>
-      <button class="btn primary" id="mn">${mk.i===mk.qs.length-1?"Finish screen":"Next question"}</button>
-    </div></div>`;
-  bindTimer("mt",90,!mk.show);
-  $("#peek").onclick=()=>{mk.show=!mk.show;renderMock();};
-  $("#mn").onclick=()=>{mk.i++;mk.show=false;if(mk.i>=mk.qs.length) award(25,"Mock screen complete");renderMock();};
-}
-
-$("#copyEmail").onclick=()=>{
-  const txt=$("#email").textContent;
-  navigator.clipboard.writeText(txt).then(()=>toast("Template copied")).catch(()=>{
-    const r=document.createRange(); r.selectNodeContents($("#email")); const s=getSelection(); s.removeAllRanges(); s.addRange(r); toast("Selected. Copy with Ctrl/Cmd+C");
-  });
-};
-/* ---------- BOOT ---------- */
-buildDeck(); renderCats(); renderCard(); renderQuiz(); renderPlist(); renderCode(); renderMock(); renderStats();
-</script>
-
-</body></html>
+<script src="script.js"></script>
+</body>
+</html>
