@@ -4,7 +4,7 @@ const CATS = {
   swe:"Software engineer", ai:"AI / prompt", cs:"Customer success", se:"Solutions engineer"
 };
 const QS = [
- {id:"o1",c:"opening",q:"Tell me about yourself.",want:"A short story of past, present and future that ends with why you fit this job.",a:"I've spent most of my career in {{background}}. Most recently I was {{recentRole}}, where I [one thing you're proud of].\n\nRecently I completed {{program}}, where I built {{project}}: {{projectWhat}}.\n\nI'm looking for a role where I can combine what I learned in {{background}} with {{goal}}. That's why this role caught my eye.",tip:"Have a 30-second version ready too. Some recruiters cut in early."},
+ {id:"o1",c:"opening",q:"Tell me about yourself.",want:"A short story of past, present and future that ends with why you fit this job.",a:"I've spent most of my career in {{background}}. Most recently I was {{recentRole}}, where I {{proud}}.\n\nRecently I completed {{program}}, where I built {{project}}: {{projectWhat}}.\n\nI'm looking for a role where I can combine what I learned in {{background}} with {{goal}}. That's why this role caught my eye.",tip:"Have a 30-second version ready too. Some recruiters cut in early."},
  {id:"o2",c:"opening",q:"Why do you want to work in tech?",want:"Real motivation, not just \"it pays well.\"",a:"In every job I've had, I was the person fixing the process: [an example from your past work]. I love solving the problem behind the problem. Tech lets me build those fixes myself, and {{program}} gave me the structure to do it seriously.",tip:"Tie it to a concrete moment you remember."},
  {id:"o3",c:"opening",q:"Why this company?",want:"Proof you did your homework.",a:"I've been following [company] because of [specific product, mission or recent news]. I really connect with [a value from their site]. With my background in [customer experience / training / the arts], I think I could help with [something from the job post].",tip:"Research this before every call. One specific detail beats three general ones."},
  {id:"o4",c:"opening",q:"Why this role?",want:"A clear match between the job post and your experience.",a:"The posting talks about [two duties from the post]. That's what I've done for years in {{background}}, just with [customers / guests / students] instead of users. Now I can also handle the technical side, since I've built {{project}}, so I can speak to both the customer and the engineering team.",tip:"Quote two phrases from the job post back to them."},
@@ -109,6 +109,7 @@ const TOK={
   name:["your name","Your name","Jordan Rivera"],
   background:["your field","Field you're coming from","hospitality, teaching, retail, healthcare…"],
   recentRole:["your most recent role","Most recent role","operations manager at a restaurant group"],
+  proud:["one thing you're proud of","Something you're proud of in that role (start with a verb)","cut guest wait times by 20% with a new seating system"],
   program:["your training program","Training, program or degree","a full-stack bootcamp"],
   project:["your best project","Best project (name)","ShiftMate"],
   projectWhat:["what your project does","What it does, in one line","an app that helps volunteers sign up for shifts"],
@@ -650,14 +651,14 @@ function renderProfile(){
     return;
   }
   const P=S.profile, mine=QS.filter(q=>S.answers[q.id]);
-  const field=k=>`<label class="field">${TOK[k][1]}<input type="text" data-k="${k}" value="${esc(P[k]||"")}" placeholder="e.g. ${esc(TOK[k][2])}" maxlength="160"></label>`;
+  const field=k=>`<label class="field${k==="proud"?" wide":""}">${TOK[k][1]}<input type="text" data-k="${k}" value="${esc(P[k]||"")}" placeholder="e.g. ${esc(TOK[k][2])}" maxlength="160"></label>`;
   el.innerHTML=`
     <div class="card"><h3>About you</h3>
       <p class="tip" style="margin:0">These fill into the <mark class="ph">[highlighted slots]</mark> in sample answers, the playbook and the thank-you email. Leave anything blank to keep the slot. Changes save automatically${ACCOUNTS?" to your account":" in this browser"}.</p>
       <div class="pgrid">
         ${field("name")}
         <label class="field">Target role<select data-k="role"><option value="">Not sure yet</option>${Object.entries(ROLE).map(([k,v])=>`<option value="${k}" ${P.role===k?"selected":""}>${v}</option>`).join("")}</select></label>
-        ${["background","recentRole","program","goal","project","projectWhat","location","startDate","salary","linkedin"].map(field).join("")}
+        ${["background","recentRole","proud","program","goal","project","projectWhat","location","startDate","salary","linkedin"].map(field).join("")}
       </div></div>
     <div class="card"><h3>Preview</h3>
       <div class="sample" id="profPrev"></div>

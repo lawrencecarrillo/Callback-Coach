@@ -158,6 +158,7 @@ input[type=text]:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
 details > summary.tip{cursor:pointer;padding:4px 0}
 details[open] > summary.tip{margin-bottom:8px}
 .pgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field.wide{grid-column:1/-1}
 .field select{font:inherit;font-weight:400;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);width:100%}
 .field input[type=text]{flex:none}
 #gloss{display:flex;flex-direction:column;gap:14px}
